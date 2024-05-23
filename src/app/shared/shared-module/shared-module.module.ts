@@ -37,6 +37,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { InputMaskModule } from 'primeng/inputmask';
 
 
 
@@ -83,6 +84,7 @@ import { HttpClientModule } from '@angular/common/http';
     ToastModule,
     ProgressBarModule,
     DropdownModule,
+    InputMaskModule,
 
     //MÓDULOS UTEIS
     FormsModule,

@@ -6,7 +6,7 @@
 </nav>
 
 <div class="ui-g-12 mt-4">
-    <h1>Demonstração do Resultado do Exercício</h1>
+    <h1>Lançamentos do DRE</h1>
 </div>
 
 <!-- FILTRO DE TABELA -->
@@ -55,7 +55,7 @@
 <!-- FILTRO DE TABELA -->
 
 
-
+<!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
     <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id" [sortOrder]="1"
@@ -162,6 +162,7 @@
         </ng-template>
     </p-table>
 </div>
+<!-- TABELA -->
 
 <div class="ui-g-12 m-2">
     <p-button label="Novo Lançamento" styleClass="p-button-rounded" (click)="createOrUpdateModal()"></p-button>

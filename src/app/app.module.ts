@@ -24,19 +24,20 @@ import { AuthService } from './pages/login/shared/auth.service';
 import { TokenInterceptor } from './token.interceptor';
 import { LoginRedirectGuard } from './login-redirect.guard';
 import { authGuard } from './auth.guard';
+import { CnpjModule } from './pages/cnpj/cnpj.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     //Componente do conteúdo da página inicial
     HomeComponent,
-    CnpjComponent,
     LoginComponent,
     LayoutComponent,
   ],
   imports: [
     //Modulos da Aplicacao
     LancamentoModule,
+    CnpjModule,
     //Modulos de componentes (rodape, sidebar e sidebarnav)
     TemplateModule, //Importante para aplicacao
     BrowserModule, //Importante para iniciar a aplicação
