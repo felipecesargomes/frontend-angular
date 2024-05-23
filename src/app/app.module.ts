@@ -22,6 +22,8 @@ import { LancamentoModule } from './pages/lancamento/lancamento.module';
 import { AuthService } from './pages/login/shared/auth.service';
 //TOKEN INTECEPTADOR
 import { TokenInterceptor } from './token.interceptor';
+import { LoginRedirectGuard } from './login-redirect.guard';
+import { authGuard } from './auth.guard';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { TokenInterceptor } from './token.interceptor';
   providers: [
     MessageService,
     AuthService,
+    authGuard,
+    LoginRedirectGuard,
     //Manda o Token JWT em toda requisição
     {
       provide: HTTP_INTERCEPTORS,
