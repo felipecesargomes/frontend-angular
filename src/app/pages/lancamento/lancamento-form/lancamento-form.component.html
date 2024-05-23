@@ -1,0 +1,301 @@
+<nav style="margin-top: 120px;">
+    <ol class="breadcrumb mt-3">
+        <li class="li breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="li breadcrumb-item active">Lançamentos</li>
+    </ol>
+</nav>
+
+<div class="ui-g-12 mt-4">
+    <h1>Demonstração do Resultado do Exercício</h1>
+</div>
+
+<!-- FILTRO DE TABELA -->
+
+<div class="container-responsive">
+    <div class="ui-g mt-4">
+        <p-card header="Filtros">
+            <form #p="ngForm" (ngSubmit)="pesquisar(p)">
+                <div class="ui-g-12 campo m-2">
+                    <label class="campo-texto">Descrição</label>
+                    <input name="descricaoPesquisa" #descricaoInputPesquisa="ngModel" [(ngModel)]="descricaoPesquisa"
+                        class="campo-texto" pTooltip="Descrição do Lançamento. Exemplo: Pagamento de energia."
+                        pInputText type="text" />
+                </div>
+
+                <div class="ui-g-12 campo m-2">
+                    <label class="campo-texto" for="tipoLancamentoSelect">Tipo Lançamento</label>
+                    <select id="tipoLancamentoSelect" style="height: 30px; appearance: auto"
+                        class="campo-texto check-list" [(ngModel)]="tipoLancamentoPesquisa"
+                        name="tipoLancamentoPesquisa" [required]="true">
+                        <option value='' selected>Selecionar Todos</option>
+                        <option *ngFor="let tipo of tiposLancamento" [ngValue]="tipo.id">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+
+                <div class="ui-g-12 m-2 campo">
+                    <label class="campo-texto">Data Lançamento</label>
+                    <input name="dataLancamentoPesquisaInicio" #dataLancamentoInputPesquisaInicio="ngModel"
+                        [(ngModel)]="dataLancamentoPesquisaInicio" pInputText type="date" style="width: 150px;" />
+                    <label style="padding: 0 5px 0 5px;">até</label>
+                    <input name="dataLancamentoPesquisaFinal" #dataLancamentoInputPesquisaFinal="ngModel"
+                        [(ngModel)]="dataLancamentoPesquisaFinal" pInputText type="date" style="width: 150px;" />
+                </div>
+                <div class="ui-g-12 m-2">
+                    <p-button type="submit" label="Pesquisar" styleClass="p-button-rounded" class="mr-2"></p-button>
+                    <button type="button" pButton label="Resetar Pesquisa" styleClass="p-button-rounded"
+                        (click)="resetarCampos(p)"></button>
+                </div>
+            </form>
+        </p-card>
+
+    </div>
+</div>
+
+<!-- FILTRO DE TABELA -->
+
+
+
+<div class="card mt-4">
+    <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
+    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id" [sortOrder]="1"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
+        [rowsPerPageOptions]="[10, 25, 50]">
+        <ng-template pTemplate="header">
+            <tr style="font-size: 15px;">
+
+                <th style="width: 5%; text-align: center;">ID</th>
+                <th style="width: 5%; text-align: center;">Status</th>
+
+                <th style="width: 20%; text-align: center;">Descrição</th>
+                <th style="width: 2%; text-align: center;"></th>
+                <th style="width: 18%; text-align: center;">Valor</th>
+                <th style="width: 5%; text-align: center;">Data Lancamento</th>
+                <th style="width: 20%; text-align: center;">Tipo de Lançamento</th>
+                <th style="width: 15%; text-align: center;">CNPJ</th>
+                <th style="width: 5%; text-align: center;">Ações</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-lancamento>
+            <tr style="font-size: 15px;">
+
+                <td style="text-align: center;">
+                    {{lancamento.id}}
+                </td>
+                <td style="text-align: center;" [ngStyle]="{
+                    'color': ((today > formatDateToISO(lancamento.dataLancamento)) &&
+                    (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA) &&
+                    (lancamento?.status === 'N')) ? 'red' : ''}"
+                    *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">
+                    <b>{{
+                        ((today > formatDateToISO(lancamento.dataLancamento)) &&
+                        (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA) &&
+                        (lancamento?.status === 'N')) ?
+                        'ATRASO NO PAGAMENTO' :
+                        ((lancamento?.status === 'N' && lancamento?.tipoLancamento?.tipoTransacao ===
+                        TipoTransacao.DESPESA)
+                        ? 'A PAGAR' : 'PAGO')
+                        }}</b>
+                </td>
+
+                <td style="text-align: center;"
+                    *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
+                    <b>{{
+                        ((today > formatDateToISO(lancamento.dataLancamento)) &&
+                        (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA) &&
+                        (lancamento?.status === 'N')) ?
+                        'ATRASO NO RECEBIMENTO' :
+                        ((lancamento?.status === 'N' && lancamento?.tipoLancamento?.tipoTransacao ===
+                        TipoTransacao.RECEITA)
+                        ? 'A RECEBER' : 'RECEBIDO')
+                        }}</b>
+                </td>
+
+
+                <td style="text-align: center;">{{ lancamento.descricaoLancamento }}</td>
+                <td>
+                    <span class="m-0 p-0 ">
+                        <i class="fa fa-arrow-alt-circle-up"
+                            *ngIf="lancamento.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA"
+                            style="color: green; font-size: 26px;"></i>
+                        <i class="fa fa-arrow-alt-circle-down"
+                            *ngIf="lancamento.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA"
+                            style="color: red; font-size: 26px;"></i>
+                    </span>
+                </td>
+                <td style="text-align: center; padding-left: 0; padding-right: 0;">
+                    {{ lancamento.valor |
+                    currency:'BRL':'symbol':'1.2-2' }}
+                </td>
+                <td style="text-align: center;">{{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: center;">{{ lancamento.tipoLancamento.descricao }}</td>
+                <td style="text-align: center;">{{ lancamento.cnpj.label }}</td>
+                <td>
+                    <div class="container-acao">
+                        <!-- Botão de Editar -->
+                        <button type="button" class="btn btn-sm btn-primary mr-3"
+                            (click)="createOrUpdateModal(lancamento)">
+                            <i class="fa fa-edit"></i>
+                        </button>
+
+                        <!-- Botão de Excluir -->
+                        <button type="button" class="btn btn-sm btn-danger" (click)="showDeleteModal(lancamento)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+
+
+        <ng-template pTemplate="footer">
+            <tr style="font-size: 15px;">
+                <td colspan="4"></td>
+                <td style="text-align: center; padding-left: 0; padding-right: 0;"
+                    [ngStyle]="{'color': getTotalRevenue() >= 0 ? 'green' : 'red'}">
+                    {{ getTotalRevenue() | currency:'BRL':'symbol':'1.2-2' }}
+                </td>
+                <td colspan="5"></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<div class="ui-g-12 m-2">
+    <p-button label="Novo Lançamento" styleClass="p-button-rounded" (click)="createOrUpdateModal()"></p-button>
+</div>
+
+<div class="card flex justify-content-center" class="dialogResponsivo">
+    <p-dialog header="{{pageTitle}}" [(visible)]="visible" [modal]="true" [draggable]="false" [resizable]="false"
+        [closable]="false">
+        <div class="alert alert-danger" *ngIf="messagesError==true" role="alert">
+            {{mensagem}}
+        </div>
+        <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+            <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoCreate==true"
+                [style]="{'height': '6px'}"></p-progressBar>
+
+            <div class="card-input m-2">
+                <label for="descricaoInput">Descrição</label>
+                <input id="descricaoInput" type="text" name="descricaoLancamento"
+                    [(ngModel)]="lancamento.descricaoLancamento" #descricaoInput="ngModel"
+                    placeholder="Ex: Pagar Fornecedor (opcional)" pInputText [style]="{ width: '100%'}"
+                    pTooltip="Descrição do lançamento. Exemplo: Pagamento de Energia." />
+                <!-- Mensagem de erro para o campo Descrição -->
+
+            </div>
+
+            <div class="card-input m-2">
+                <label for="valorInputLabel">Valor*</label>
+                <input id="valorInputLabel" type="text" appValidacaoValor name="valor" [(ngModel)]="lancamento.valor"
+                    #valorInput="ngModel" placeholder="Digite o valor do lançamento" class="p-inputtext"
+                    style="width: 100%; text-align: left;" currencyMask
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" field="descricao" required
+                    pTooltip="Valor do lançamento." />
+
+                <div *ngIf="(valorInput.invalid && valorInput.touched) || dataInput.pristine">
+
+                    <!-- <p *ngIf="valorInput.errors?.['required']">Este campo é obrigatório.</p> !-->
+                    <div class="text-danger error-message" *ngIf="valorInput?.errors?.['required']">Este campo é
+                        obrigatório.</div>
+                    <div class="text-danger error-message" *ngIf="valorInput?.errors?.['appValidacaoValor']">Insira um
+                        valor maior ou igual a 0.</div>
+                </div>
+
+            </div>
+
+            <div class="card-input m-2">
+                <label for="dataInput">Data Lançamento*</label>
+                <input class="form-control" type="date" name="data" [(ngModel)]="lancamento.dataLancamento"
+                    #dataInput="ngModel" required pTooltip="Data de pagamento, recebimento ou previsão." />
+                <div *ngIf="(dataInput.invalid && dataInput.touched) || dataInput.pristine">
+                    <div class="text-danger error-message" *ngIf="dataInput.errors?.['required']">Este campo é
+                        obrigatório.</div>
+                </div>
+            </div>
+
+
+            <!-- Para os campos de autocomplete, você precisa garantir que os eventos estejam atualizando o modelo corretamente -->
+            <div class="card-input m-2 botaoAutoComplete">
+                <label for="tipoLancamentoInput">Tipo Lançamento*</label>
+                <p-autoComplete id="tipoLancamentoInput" [(ngModel)]="lancamento.tipoLancamento" name="tipoLancamento"
+                    [dropdown]="true" [suggestions]="filteredTiposLancamento"
+                    (completeMethod)="filterTipoLancamento($event)" field="tipo" [style]="{ width: '100%'}"
+                    (onSelect)="onTipoLancamentoSelect($event)" #tipoLancamentoInput="ngModel" [required]="true"
+                    appValidacaoTipoLancamento></p-autoComplete>
+                <div
+                    *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched) || (tipoLancamentoInput.invalid && tipoLancamentoInput.pristine)">
+                    <div class="text-danger error-message" *ngIf="tipoLancamentoInput.errors?.['required']">Este campo é
+                        obrigatório.
+                    </div>
+                    <div class="text-danger error-message"
+                        *ngIf="tipoLancamentoInput?.errors?.['appValidacaoTipoLancamento']">Verifique se o tipo de
+                        lançamento foi selecionado.</div>
+                </div>
+            </div>
+
+            <!-- Ta sendo validado fora do ngForm -->
+
+            <div class="ui-g-12 campo m-2">
+                <label class="campo-texto" for="tipoLojaSelect">Tipo Loja *</label>
+                <select #lojaInput (change)="mudarLoja($event)" class="check-list form-control" id="tipoLojaSelect"
+                    style="height: 30px; appearance: auto" name="loja" required>
+                    <option value="" selected>
+                        <span style="color: red;">Selecione uma opção</span>
+                    </option>
+                    <option *ngFor="let loja of lojasLancamento" [value]="loja.id"
+                        [selected]="loja.id===lancamento.cnpj?.id">{{ loja.label }}</option>
+                </select>
+
+                <div *ngIf="lojaValidacao==false" class="text-danger error-message">
+                    Selecione uma opção válida.
+                </div>
+
+            </div>
+
+            <div class="ui-g-12 campo m-2">
+                <label for="checkStatus" class="campo-texto">Se o valor já foi pago ou recebido, marque a opção
+                    abaixo:</label>
+                <input class="inputStatus" type="checkbox" id="checkStatus" name="checkStatus" [(ngModel)]="checked">
+            </div>
+
+
+            <hr />
+            <div class="container-acao" style="justify-content: flex-end;">
+                <div class="ui-g-6 m-2">
+                    <p-button label="Fechar" (click)="hideCreateOrUpdateModal()" styleClass="btn-secondary"></p-button>
+                </div>
+                <div class="ui-g-6 m-2">
+                    <p-button *ngIf="pageTitle === 'Editar Lançamento'" label="Editar" type="submit"
+                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false"></p-button>
+                    <p-button *ngIf="pageTitle === 'Novo Lançamento'" label="Salvar" type="submit"
+                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false"></p-button>
+                </div>
+
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+
+<div class="card flex justify-content-center" class="dialogResponsivo">
+    <p-dialog header="Excluir" [(visible)]="deleteModalVisible" [modal]="true" [draggable]="false" [resizable]="false"
+        [closable]="false">
+        <p class="m-0">
+            Tem certeza que deseja excluir?
+        </p>
+        <hr />
+        <div class="container-acao" style="justify-content: flex-end;">
+            <div class="ui-g-6 m-2">
+                <p-button label="Não" (click)="hideShowDeleteModal()" styleClass="btn-warning"></p-button>
+            </div>
+            <div class="ui-g-6 m-2">
+                <p-button label="Sim" (click)="deleteAction()" styleClass="btn-danger"></p-button>
+            </div>
+        </div>
+    </p-dialog>
+</div>
+
+<p-toast></p-toast>

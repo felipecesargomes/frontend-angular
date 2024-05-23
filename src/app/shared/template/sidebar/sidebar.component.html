@@ -1,0 +1,57 @@
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="outer-div">
+                        <div class="inner-div">
+                            <img src="../../../../assets/img/cabemais.png" />
+                        </div>
+                    </div>
+                    <div class="outer-div" style="margin:0; margin-top: 20px;">
+
+                    </div>
+                    <div class="sb-sidenav-menu-heading">Sistema Cappacitar</div>
+                    <a class="nav-link" routerLink="home">
+                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                        Pagina Inicial
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading">Cadastros do Sistema</div>
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseLayoutsCnpj"
+                        aria-expanded="false" aria-controls="collapseLayoutsCnpj"
+                        >
+                        <div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
+                        Lojas
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayoutsCnpj" aria-labelledby="headingOne"
+                        data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" routerLink="loja"> Listar
+                                Lojas</a></nav>
+                    </div>
+
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseLayoutsLancamentos"
+                        aria-expanded="false" aria-controls="collapseLayoutsLancamentos"
+                        >
+                        <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                        Lançamentos
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayoutsLancamentos" aria-labelledby="headingOne"
+                        data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" routerLink="lancamento">Listar
+                                Lançamentos</a></nav>
+                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" routerLink="tipolancamento">Tipos de Lançamentos</a></nav>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Usuário Logado:</div>
+                {{ usuarioLogado }}
+            </div>
+        </nav>
+    </div>
+
