@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/pages/login/shared/auth.service';
 
 @Component({
@@ -11,11 +12,18 @@ export class NavbarComponent {
   usuarioLogado?: string;
 
   constructor(
-    private AuthService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.usuarioLogado = this.AuthService.getUsuarioAutenticado();
+    this.usuarioLogado = this.authService.getUsuarioAutenticado();
+    this.usuarioLogado = this.usuarioLogado?.toLocaleUpperCase();
+  }
+
+  logout() {
+    this.authService.encerrarSessao();
+    this.router.navigate(['/login']);
   }
 
 }

@@ -25,6 +25,7 @@ import { TokenInterceptor } from './token.interceptor';
 import { LoginRedirectGuard } from './login-redirect.guard';
 import { authGuard } from './auth.guard';
 import { CnpjModule } from './pages/cnpj/cnpj.module';
+import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.module';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { CnpjModule } from './pages/cnpj/cnpj.module';
     //Modulos da Aplicacao
     LancamentoModule,
     CnpjModule,
+    TipolancamentoModule,
     //Modulos de componentes (rodape, sidebar e sidebarnav)
     TemplateModule, //Importante para aplicacao
     BrowserModule, //Importante para iniciar a aplicação

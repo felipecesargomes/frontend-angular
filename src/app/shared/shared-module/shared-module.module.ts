@@ -38,6 +38,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { InputMaskModule } from 'primeng/inputmask';
+import { MessagesModule } from 'primeng/messages';
 
 
 
@@ -85,6 +86,7 @@ import { InputMaskModule } from 'primeng/inputmask';
     ProgressBarModule,
     DropdownModule,
     InputMaskModule,
+    MessagesModule,
 
     //MÓDULOS UTEIS
     FormsModule,

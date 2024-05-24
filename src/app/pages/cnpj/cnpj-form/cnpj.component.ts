@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-cnpj',
@@ -11,6 +12,7 @@ export class CnpjComponent implements OnInit {
     nome: '',
     endereco: ''
   };
+  messages1: Message[] = [];
 
   cadastrarLoja(): void {
     // Simula o cadastro da nova loja (geralmente seria uma chamada a uma API)
@@ -31,6 +33,9 @@ export class CnpjComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarLojasFicticias();
+    this.messages1 = [
+      { severity: 'warn', summary: 'Tela Protótipo', detail: 'Essa tela é um protótipo' },
+    ];
   }
 
   carregarLojasFicticias(): void {
