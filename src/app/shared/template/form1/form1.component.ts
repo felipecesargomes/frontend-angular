@@ -10,4 +10,6 @@ export class Form1Component {
   @Input() cardBodyClasses?: string;
   @Input() headerText: string = "";
   @Input() iconClass: string = ""; 
+
+  
 }

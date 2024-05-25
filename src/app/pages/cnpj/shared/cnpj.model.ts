@@ -1,3 +1,5 @@
+import { Estado } from "src/app/utils/cidades-estados/estado.model";
+
 export class Cnpj {
     
     constructor(
@@ -5,7 +7,7 @@ export class Cnpj {
         public nome?: string,
         public cidade?: string,
         public cnpj?: string,
-        public estado?: string
+        public estado?: Estado
     ) {
 
     }

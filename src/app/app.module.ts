@@ -26,6 +26,9 @@ import { LoginRedirectGuard } from './login-redirect.guard';
 import { authGuard } from './auth.guard';
 import { CnpjModule } from './pages/cnpj/cnpj.module';
 import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.module';
+import { LoadingSpinnerComponent } from './shared/loading/loading-spinner/loading-spinner.component';
+import { LoadingService } from './shared/loading/loading.service';
+import { LoadingInterceptor } from './loading-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.modu
     //Componente do conteúdo da página inicial
     HomeComponent,
     LoginComponent,
-    LayoutComponent
+    LayoutComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     //Modulos da Aplicacao
@@ -61,6 +65,12 @@ import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.modu
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true
+    },
+    LoadingService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true
     }
   ],

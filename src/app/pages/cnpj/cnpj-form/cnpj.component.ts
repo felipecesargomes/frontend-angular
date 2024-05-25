@@ -1,15 +1,16 @@
 import { Estado } from 'src/app/utils/cidades-estados/estado.model';
 import { CidadeEstadoService } from './../../../utils/cidades-estados/cidades-estados.service';
 import { Cnpj } from './../shared/cnpj.model';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Cidade } from 'src/app/utils/cidades-estados/cidade.modal';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-cnpj',
   templateUrl: './cnpj.component.html',
   styleUrls: ['./cnpj.component.css']
 })
-export class CnpjComponent implements OnInit {
+export class CnpjComponent implements OnInit, AfterViewInit {
 
   cnpj: Cnpj = new Cnpj();
 
@@ -18,19 +19,48 @@ export class CnpjComponent implements OnInit {
 
   barraDeProgressoLista: boolean = false;
   listaCidades: Cidade[] = [];
+  listaEstados: Estado[] = []
   filteredCidades: any[] = [];
 
+  private searchSubject = new Subject<string>();
+
+
   constructor(
-    private cidadeEstadoService: CidadeEstadoService
+    private cidadeService: CidadeEstadoService,
+    private estadoService: CidadeEstadoService,
+    private cdr: ChangeDetectorRef
   ) { }
+  
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
+
+  }
 
   ngOnInit(): void {
     this.carregarLojasFicticias();
-    this.cidadeEstadoService.getCidades().subscribe({
+
+    this.cidadeService.getCidades().subscribe({
       next: (cidades) => {
         this.listaCidades = cidades;
+        this.searchCidade({ query: '' }); // Chamando a função searchCidade após receber os dados
       }
     });
+
+    this.estadoService.getEstados().subscribe({
+      next: (estados) => {
+        this.listaEstados = estados;
+      }
+    })
+    this.searchSubject.pipe(
+      debounceTime(80)
+    ).subscribe(query => {
+      this.filteredCidades = this.listaCidades
+        .filter(cidade => cidade.state?.id === this.cnpj.estado?.id) // Filtra as cidades pelo estado selecionado
+        .filter(cidade => cidade.name?.toLowerCase().includes(query.toLowerCase())) // Filtra as cidades pelo nome
+        .slice(0, 10); // Limita a três primeiras opções
+    });
+    
+
   }
 
   cadastrarLoja(): void {
@@ -57,14 +87,19 @@ export class CnpjComponent implements OnInit {
   }
 
   searchCidade(event: any) {
-    const query = event.query;
-    if (query) {
-      this.filteredCidades = this.listaCidades.filter(cidade => {
-        return cidade.name?.toLowerCase().startsWith(query.toLowerCase());
-      }).slice(0, 3); // Limita a três primeiras opções
-    } 
+
+    // Uso do filtro do autocomplete sem debounce
+    // console.log(this.cnpj.estado?.id);
+
+    // const query = event.query.toLowerCase();
+  
+    // this.filteredCidades = this.listaCidades
+    //   .filter(cidade => cidade.state?.id === this.cnpj.estado?.id && cidade.name?.toLowerCase().startsWith(query))
+    //   .slice(0, 3);
+    
+    // console.log(this.filteredCidades); // Verifique os resultados filtrados no console
+    // // Em seguida, você pode remover esta linha de console.log se não precisar mais dela. console.log(this.cnpj.estado?.id);
+    this.searchSubject.next(event.query);
   }
-  
-  
 
 }

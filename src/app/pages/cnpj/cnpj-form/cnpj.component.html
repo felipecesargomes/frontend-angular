@@ -18,15 +18,15 @@
         </div>
         
         <div class="form-group col-md-6">
-            <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" class="form-control" pInputText
-            [(ngModel)]="cnpj.cidade" />
+            <label for="estado">Estado:</label>
+            <p-dropdown [options]="listaEstados" [(ngModel)]="cnpj.estado" optionLabel="name" name="estado"></p-dropdown>
         </div>
 
   
         <div class="form-group col-md-6">
+            <label for="cidade">Cidade:</label>
             <p-autoComplete [(ngModel)]="cnpj.cidade" [suggestions]="filteredCidades" (completeMethod)="searchCidade($event)"
-            name="cidade" field="name" [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]= "true"></p-autoComplete>          
+            name="cidade" field="name"  [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]="true" [disabled]="!cnpj.estado"></p-autoComplete>  
         </div>
 
         <div class="form-group col-md-6 formCadastroLoja">

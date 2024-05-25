@@ -134,19 +134,19 @@ export class LancamentoFormComponent implements OnInit {
         filteredResults = this.tiposLancamento.filter(tipo => {
           if (tipo.tipo.toLowerCase() === query.trim().toLowerCase())
             this.lancamento.tipoLancamento = tipo;
-          return tipo.tipo.toLowerCase().startsWith(query.toLowerCase());
+          return tipo.tipo.toLowerCase().includes(query.toLowerCase());
         });
       } else {
         filteredResults = this.tiposLancamento.filter(tipo => {
           if (tipo.descricao.toLowerCase() === query.trim().toLowerCase())
             this.lancamento.tipoLancamento = tipo;
-          return tipo.descricao.toLowerCase().startsWith(query.toLowerCase());
+          return tipo.descricao.toLowerCase().includes(query.toLowerCase());
         });
       }
       // Verificar se há um valor selecionado
       if (this.selectedTipoLancamento) {
         // Se tiver texto, retornar apenas uma sugestão
-        this.filteredTiposLancamento = filteredResults.slice(0, 1);
+        this.filteredTiposLancamento = filteredResults;
       } else {
         // Se não tiver texto, retornar até dez sugestões
         this.filteredTiposLancamento = filteredResults;
