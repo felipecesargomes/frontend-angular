@@ -33,7 +33,7 @@ import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.modu
     //Componente do conteúdo da página inicial
     HomeComponent,
     LoginComponent,
-    LayoutComponent,
+    LayoutComponent
   ],
   imports: [
     //Modulos da Aplicacao

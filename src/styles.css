@@ -11138,7 +11138,7 @@ body {
 }
 
 .sb-sidenav-dark {
-  background-color: #e9e9e9;
+  background-color: var(--light);
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -11519,4 +11519,9 @@ main {
   background-clip: padding-box;
   border-radius: .25rem;
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.p-autocomplete-panel {
+  overflow: none;
+  text-align: center;
 }

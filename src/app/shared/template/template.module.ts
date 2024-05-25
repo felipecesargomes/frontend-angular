@@ -7,6 +7,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ImageModule } from 'primeng/image';
 
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Card1Component } from './card1/card1.component';
+import { Form1Component } from './form1/form1.component';
 
 
 

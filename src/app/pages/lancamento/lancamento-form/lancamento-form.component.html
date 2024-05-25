@@ -58,8 +58,8 @@
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id" [sortOrder]="1"
-        [tableStyle]="{ 'min-width': '50rem' }"
+    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id"
+        [sortOrder]="1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
         <ng-template pTemplate="header">
@@ -225,7 +225,7 @@
                     [dropdown]="true" [suggestions]="filteredTiposLancamento"
                     (completeMethod)="filterTipoLancamento($event)" field="tipo" [style]="{ width: '100%'}"
                     (onSelect)="onTipoLancamentoSelect($event)" #tipoLancamentoInput="ngModel" [required]="true"
-                    appValidacaoTipoLancamento></p-autoComplete>
+                    appValidacaoTipoLancamento [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]= "true"></p-autoComplete>
                 <div
                     *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched) || (tipoLancamentoInput.invalid && tipoLancamentoInput.pristine)">
                     <div class="text-danger error-message" *ngIf="tipoLancamentoInput.errors?.['required']">Este campo é
@@ -233,7 +233,8 @@
                     </div>
                     <div class="text-danger error-message"
                         *ngIf="tipoLancamentoInput?.errors?.['appValidacaoTipoLancamento']">Verifique se o tipo de
-                        lançamento foi selecionado.</div>
+                        lançamento foi selecionado.
+                    </div>
                 </div>
             </div>
 

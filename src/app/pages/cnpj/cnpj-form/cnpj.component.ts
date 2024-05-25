@@ -1,5 +1,8 @@
+import { Estado } from 'src/app/utils/cidades-estados/estado.model';
+import { CidadeEstadoService } from './../../../utils/cidades-estados/cidades-estados.service';
+import { Cnpj } from './../shared/cnpj.model';
 import { Component, OnInit } from '@angular/core';
-import { Message } from 'primeng/api';
+import { Cidade } from 'src/app/utils/cidades-estados/cidade.modal';
 
 @Component({
   selector: 'app-cnpj',
@@ -7,35 +10,31 @@ import { Message } from 'primeng/api';
   styleUrls: ['./cnpj.component.css']
 })
 export class CnpjComponent implements OnInit {
-  novaLoja: any = {
-    id: 0,
-    nome: '',
-    endereco: ''
-  };
-  messages1: Message[] = [];
 
-  cadastrarLoja(): void {
-    // Simula o cadastro da nova loja (geralmente seria uma chamada a uma API)
-    // Aqui você pode adicionar a lógica para salvar a nova loja
-    this.novaLoja.id = this.listaLojas.length + 1;
-    this.listaLojas.push(this.novaLoja);
-
-    // Limpa o formulário após o cadastro
-    this.novaLoja = { id: 0, nome: '', endereco: '' };
-  }
+  cnpj: Cnpj = new Cnpj();
 
   // Este é o array de lojas que será preenchido com os dados fictícios
   listaLojas: any[] = [];
 
   barraDeProgressoLista: boolean = false;
+  listaCidades: Cidade[] = [];
+  filteredCidades: any[] = [];
 
-  constructor() { }
+  constructor(
+    private cidadeEstadoService: CidadeEstadoService
+  ) { }
 
   ngOnInit(): void {
     this.carregarLojasFicticias();
-    this.messages1 = [
-      { severity: 'warn', summary: 'Tela Protótipo', detail: 'Essa tela é um protótipo' },
-    ];
+    this.cidadeEstadoService.getCidades().subscribe({
+      next: (cidades) => {
+        this.listaCidades = cidades;
+      }
+    });
+  }
+
+  cadastrarLoja(): void {
+
   }
 
   carregarLojasFicticias(): void {
@@ -56,5 +55,16 @@ export class CnpjComponent implements OnInit {
       this.barraDeProgressoLista = false;
     }, 2000); // Simula um atraso na resposta
   }
+
+  searchCidade(event: any) {
+    const query = event.query;
+    if (query) {
+      this.filteredCidades = this.listaCidades.filter(cidade => {
+        return cidade.name?.toLowerCase().startsWith(query.toLowerCase());
+      }).slice(0, 3); // Limita a três primeiras opções
+    } 
+  }
+  
+  
 
 }
