@@ -58,28 +58,47 @@
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="dataLancamento"
-        [sortOrder]="-1" [tableStyle]="{ 'min-width': '50rem' }"
+    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" 
+        sortField="dataLancamento" [sortOrder]="-1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
+        
         <ng-template pTemplate="header">
             <tr style="font-size: 15px;">
-
-                <th style="width: 5%; text-align: center;">ID</th>
-                <th style="width: 5%; text-align: center;">Status</th>
-
-                <th style="width: 20%; text-align: center;">Descrição</th>
+                <th style="width: 5%; text-align: center;">
+                    ID
+                </th>
+                <th pSortableColumn="status" style="width: 5%; text-align: center;">
+                    Status
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="descricaoLancamento" style="width: 15%; text-align: center;">
+                    Descrição
+                    <p-sortIcon field="descricaoLancamento"></p-sortIcon>
+                </th>
                 <th style="width: 2%; text-align: center;"></th>
-                <th style="width: 18%; text-align: center;">Valor</th>
-                <th style="width: 5%; text-align: center;">Data Recebimento/Vencimento</th>
-                <th style="width: 20%; text-align: center;">Tipo de Lançamento</th>
-                <th style="width: 15%; text-align: center;">CNPJ</th>
+                <th pSortableColumn="valor" style="width: 18%; text-align: center;">
+                    Valor
+                    <p-sortIcon field="valor"></p-sortIcon>
+                </th>
+                <th pSortableColumn="dataLancamento" style="width: 10%; text-align: center;">
+                    Data Recebimento/Vencimento
+                    <p-sortIcon field="dataLancamento"></p-sortIcon>
+                </th>
+                <th pSortableColumn="tipoLancamento.descricao" style="width: 20%; text-align: center;">
+                    Tipo de Lançamento
+                    <p-sortIcon field="tipoLancamento.descricao"></p-sortIcon>
+                </th>
+                <th pSortableColumn="cnpj.cnpj" style="width: 15%; text-align: center;">
+                    CNPJ
+                    <p-sortIcon field="cnpj.cnpj"></p-sortIcon>
+                </th>
                 <th style="width: 5%; text-align: center;">Ações</th>
             </tr>
         </ng-template>
+        
         <ng-template pTemplate="body" let-lancamento let-rowData let-rowIndex="rowIndex">
             <tr style="font-size: 15px;">
-
                 <td style="text-align: center;">
                     {{ rowData?.totalUnits }} {{rowIndex + 1}}
                 </td>
@@ -99,7 +118,7 @@
                         }}</b>
                 </td>
 
-                <td style="text-align: center;"  [ngStyle]="{
+                <td style="text-align: center;" [ngStyle]="{
                     'color': ((today > formatDateToISO(lancamento.dataLancamento)) &&
                     (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA) &&
                     (lancamento?.status === 'N')) ? 'red' : ''}"
@@ -115,10 +134,9 @@
                         }}</b>
                 </td>
 
-
                 <td style="text-align: center;">{{ lancamento.descricaoLancamento }}</td>
                 <td>
-                    <span class="m-0 p-0 ">
+                    <span class="m-0 p-0">
                         <i class="fa fa-arrow-alt-circle-up"
                             *ngIf="lancamento.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA"
                             style="color: green; font-size: 26px;"></i>
@@ -128,8 +146,7 @@
                     </span>
                 </td>
                 <td style="text-align: center; padding-left: 0; padding-right: 0;">
-                    {{ lancamento.valor |
-                    currency:'BRL':'symbol':'1.2-2' }}
+                    {{ lancamento.valor | currency:'BRL':'symbol':'1.2-2' }}
                 </td>
                 <td style="text-align: center;">{{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}</td>
                 <td style="text-align: center;">{{ lancamento.tipoLancamento.descricao }}</td>
@@ -151,8 +168,6 @@
             </tr>
         </ng-template>
 
-
-
         <ng-template pTemplate="footer">
             <tr style="font-size: 15px;">
                 <td colspan="4"></td>
@@ -166,6 +181,7 @@
     </p-table>
 </div>
 <!-- TABELA -->
+
 
 <div class="ui-g-12 m-2">
     <p-button label="Novo Lançamento" styleClass="p-button-rounded" (click)="createOrUpdateModal()"></p-button>
