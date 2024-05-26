@@ -4,6 +4,8 @@ import { Cnpj } from './../shared/cnpj.model';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Cidade } from 'src/app/utils/cidades-estados/cidade.modal';
 import { Subject, debounceTime } from 'rxjs';
+import { NgForm } from '@angular/forms';
+import { CnpjService } from '../shared/cnpj.service';
 
 @Component({
   selector: 'app-cnpj',
@@ -28,16 +30,16 @@ export class CnpjComponent implements OnInit, AfterViewInit {
   constructor(
     private cidadeService: CidadeEstadoService,
     private estadoService: CidadeEstadoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cnpjService: CnpjService
   ) { }
   
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
-
   }
 
   ngOnInit(): void {
-    this.carregarLojasFicticias();
+    this.carregarLojas();
 
     this.cidadeService.getCidades().subscribe({
       next: (cidades) => {
@@ -52,7 +54,7 @@ export class CnpjComponent implements OnInit, AfterViewInit {
       }
     })
     this.searchSubject.pipe(
-      debounceTime(80)
+      debounceTime(150)
     ).subscribe(query => {
       this.filteredCidades = this.listaCidades
         .filter(cidade => cidade.state?.id === this.cnpj.estado?.id) // Filtra as cidades pelo estado selecionado
@@ -63,27 +65,19 @@ export class CnpjComponent implements OnInit, AfterViewInit {
 
   }
 
-  cadastrarLoja(): void {
-
-  }
-
-  carregarLojasFicticias(): void {
+  carregarLojas(): void {
     this.barraDeProgressoLista = true;
-    setTimeout(() => {
-      this.listaLojas = [
-        { id: 1, nome: 'Loja A', endereco: 'Rua 1, Número 100' },
-        { id: 2, nome: 'Loja B', endereco: 'Rua 2, Número 200' },
-        { id: 3, nome: 'Loja C', endereco: 'Rua 3, Número 300' },
-        { id: 4, nome: 'Loja D', endereco: 'Rua 4, Número 400' },
-        { id: 5, nome: 'Loja E', endereco: 'Rua 5, Número 500' },
-        { id: 6, nome: 'Loja F', endereco: 'Rua 6, Número 600' },
-        { id: 7, nome: 'Loja G', endereco: 'Rua 7, Número 700' },
-        { id: 8, nome: 'Loja H', endereco: 'Rua 8, Número 800' },
-        { id: 9, nome: 'Loja I', endereco: 'Rua 9, Número 900' },
-        { id: 10, nome: 'Loja J', endereco: 'Rua 10, Número 1000' },
-      ];
-      this.barraDeProgressoLista = false;
-    }, 2000); // Simula um atraso na resposta
+    this.cnpjService.getAll().subscribe({
+      next: (lojas) => {
+        this.listaLojas = lojas;
+        this.barraDeProgressoLista = false;
+      },
+      error: (error) => {
+        this.barraDeProgressoLista = true;
+      },
+      complete: () => {
+      },
+    })
   }
 
   searchCidade(event: any) {
@@ -101,5 +95,20 @@ export class CnpjComponent implements OnInit, AfterViewInit {
     // // Em seguida, você pode remover esta linha de console.log se não precisar mais dela. console.log(this.cnpj.estado?.id);
     this.searchSubject.next(event.query);
   }
+
+  mudarEstado(event: any) {
+    this.cnpj.estado = event.value;
+  }
+
+  onCidadeSelect(event: any) {
+    this.cnpj.cidade = event.value;
+    console.log(this.cnpj)
+   // this.tipoLancamentoValido = true;
+  }
+
+  onSubmit(form: NgForm) {
+    console.log(form);
+  } 
+
 
 }

@@ -1,0 +1,12 @@
+.form-control#cidadeInput {
+  padding: 0 !important;
+  border: none;
+}
+
+p-inputmask.ng-dirty.ng-invalid > .p-inputtext {
+  border: 1px solid #ced4da !important;
+}
+
+p-autocomplete.ng-dirty.ng-invalid > .p-autocomplete > .p-inputtext {
+  border: 1px solid #ced4da !important;
+}

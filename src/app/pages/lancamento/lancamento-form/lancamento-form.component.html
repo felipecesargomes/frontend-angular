@@ -77,11 +77,11 @@
                 <th style="width: 5%; text-align: center;">Ações</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-lancamento>
+        <ng-template pTemplate="body" let-lancamento let-rowData let-rowIndex="rowIndex">
             <tr style="font-size: 15px;">
 
                 <td style="text-align: center;">
-                    {{lancamento.id}}
+                    {{ rowData?.totalUnits }} {{rowIndex + 1}}
                 </td>
                 <td style="text-align: center;" [ngStyle]="{
                     'color': ((today > formatDateToISO(lancamento.dataLancamento)) &&
@@ -130,7 +130,7 @@
                 </td>
                 <td style="text-align: center;">{{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}</td>
                 <td style="text-align: center;">{{ lancamento.tipoLancamento.descricao }}</td>
-                <td style="text-align: center;">{{ lancamento.cnpj.label }}</td>
+                <td style="text-align: center;">{{ lancamento.cnpj.cnpj }}</td>
                 <td>
                     <div class="container-acao">
                         <!-- Botão de Editar -->

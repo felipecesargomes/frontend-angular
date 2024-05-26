@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ValidacaoTipoLancamentoDirective } from './shared/validacao-tipo-lancamento.directive';
 import { ValidacaoPagamentoDirective } from './shared/validacao-pagamento.directive';
 import { SharedModuleModule } from 'src/app/shared/shared-module/shared-module.module';
+import { CnpjPipe } from 'src/app/shared/pipes/cnpj.pipe';
 
 @NgModule({
   declarations: [

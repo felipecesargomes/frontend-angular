@@ -6,36 +6,88 @@
 </nav>
 
 <app-form1 cardHeaderClasses="bg-primary text-white" [headerText]="'Cadastrar nova loja'" iconClass="fa fa-store">
-    <form class="row">
+    <form class="row" #f="ngForm" (ngSubmit)="onSubmit(f)">
         <div class="form-group col-md-6">
             <label for="nome">Nome da Loja*:</label>
-            <input type="text" class="form-control" id="nome" #inputNomeCidade="ngModel" [(ngModel)]="cnpj.nome"
-                name="nome" required>
+            <input 
+            type="text"
+            class="form-control"
+            id="nome"
+            #inputNomeCidade="ngModel"
+            [(ngModel)]="cnpj.nome"
+            name="nome" required
+            minlength="2"
+            >
             <div *ngIf="(inputNomeCidade.invalid && inputNomeCidade.touched)">
-                <div class="text-danger error-message" *ngIf="inputNomeCidade?.errors?.['required']">Este campo é
+                <div class="text-danger" *ngIf="inputNomeCidade?.errors?.['required']">Este campo é
+                    obrigatório.</div>
+                <div class="text-danger" *ngIf="inputNomeCidade.errors?.['minlength']">Loja deve ter pelo menos 2 dígitos</div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="cidade">Estado*:</label>
+            <p-dropdown 
+                [options]="listaEstados"
+                [(ngModel)]="cnpj.estado"
+                optionLabel="name"
+                [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}"
+                (onChange)="mudarEstado($event)"
+                name="estado"
+                #inputEstado="ngModel"
+                [required]="true" >
+            </p-dropdown>
+            <div *ngIf="(inputEstado.invalid && inputEstado.touched)">
+                <div class="text-danger" *ngIf="inputEstado?.errors?.['required']">Este campo é
                     obrigatório.</div>
             </div>
         </div>
-        
-        <div class="form-group col-md-6">
-            <label for="estado">Estado:</label>
-            <p-dropdown [options]="listaEstados" [(ngModel)]="cnpj.estado" optionLabel="name" name="estado"></p-dropdown>
-        </div>
 
-  
+
         <div class="form-group col-md-6">
-            <label for="cidade">Cidade:</label>
-            <p-autoComplete [(ngModel)]="cnpj.cidade" [suggestions]="filteredCidades" (completeMethod)="searchCidade($event)"
-            name="cidade" field="name"  [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]="true" [disabled]="!cnpj.estado"></p-autoComplete>  
+            <label for="cidade">Cidade*:</label>
+            <p-autoComplete 
+              [(ngModel)]="cnpj.cidade" 
+              [suggestions]="filteredCidades" 
+              (completeMethod)="searchCidade($event)" 
+              field="name" 
+              placeholder="Cidade" 
+              class="form-control" 
+              id="cidadeInput"
+              [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]= "true"
+              [style]="{'width':'100%','height':'38px', 'margin':'0px'}" 
+              name="cidade"
+              #inputCidade="ngModel"
+              [inputStyle]="{'width':'100%','height':'38px', 'margin':'0px'}" [disabled]="!cnpj.estado" [required]="true" appValidacaoCidade
+              (onSelect)="onCidadeSelect($event)" > 
+            </p-autoComplete>
+            <div *ngIf="(inputCidade.invalid && inputCidade.touched)">
+                <div class="text-danger" *ngIf="inputCidade?.errors?.['required']">Este campo é
+                    obrigatório.</div>
+                <div class="text-danger"
+                    *ngIf="inputCidade?.errors?.['appValidacaoCidade']">Verifique se cidade
+                    foi selecionada.
+                </div>
+            </div>
         </div>
+          
 
         <div class="form-group col-md-6 formCadastroLoja">
             <label for="cnpj">CNPJ:</label>
-            <p-inputMask id="cnpj" class="form-control" mask="99.999.999/9999-99" [(ngModel)]="cnpj.cnpj"
-                name="cnpj" placeholder="99.999.999/9999-99"></p-inputMask>
+            <p-inputMask 
+                id="cnpj"
+                class="form-control"
+                mask="99.999.999/9999-99"
+                [(ngModel)]="cnpj.cnpj"
+                name="cnpj"
+                placeholder="99.999.999/9999-99"
+                #inputCnpj="ngModel"
+                [required]="true"
+                [minlength]="14" >
+            </p-inputMask>
         </div>
         <div class="form-group col-md-12 mt-0">
-            <p-button label="Salvar/Editar" class="mr-2" styleClass="p-button-rounded">
+            <p-button type="submit" label="Salvar/Editar" [disabled]="(f?.invalid ?? true)" class="mr-2" styleClass="p-button-rounded">
                 <i class="fas fa-save mr-2" style="color:white"></i>
             </p-button>
             <p-button label="Resetar" styleClass="p-button-rounded">
@@ -73,7 +125,7 @@
                 <td style="text-align: left;">{{loja.nome}}</td>
                 <td style="text-align: left;">{{loja.cidade}}</td>
                 <td style="text-align: left;">{{loja.estado}}</td>
-                <td style="text-align: left;">{{loja.cnpj}}</td>
+                <td style="text-align: left;">{{loja.cnpj | cnpj}}</td>
                 <td style="text-align: center;">
                     <div class="container-acao">
                         <button type="button" class="btn btn-sm btn-primary mr-3">
