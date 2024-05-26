@@ -29,7 +29,6 @@ import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.modu
 import { LoadingSpinnerComponent } from './shared/loading/loading-spinner/loading-spinner.component';
 import { LoadingService } from './shared/loading/loading.service';
 import { LoadingInterceptor } from './loading-interceptor.service';
-import { CnpjPipe } from './shared/pipes/cnpj.pipe';
 
 @NgModule({
   declarations: [
@@ -52,10 +51,10 @@ import { CnpjPipe } from './shared/pipes/cnpj.pipe';
     RouterModule, //Importante para aplicacao - Rotas padrao da aplicacao
     
     //Modulos Essenciais
-    //FormsModule, 
-    //HttpClientModule,
+    FormsModule, 
+    HttpClientModule,
     BrowserAnimationsModule,
-    //ReactiveFormsModule
+    ReactiveFormsModule
   ],
   providers: [
     MessageService,

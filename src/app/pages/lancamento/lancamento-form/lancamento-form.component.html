@@ -6,7 +6,7 @@
 </nav>
 
 <div class="ui-g-12 mt-4">
-    <h1>Lançamentos do DRE</h1>
+    <h1>Lançamentos Financeiros</h1>
 </div>
 
 <!-- FILTRO DE TABELA -->
@@ -34,7 +34,7 @@
 
 
                 <div class="ui-g-12 m-2 campo">
-                    <label class="campo-texto">Data Lançamento</label>
+                    <label class="campo-texto">Data de Recebimento ou Vencimento de Pagamentos</label>
                     <input name="dataLancamentoPesquisaInicio" #dataLancamentoInputPesquisaInicio="ngModel"
                         [(ngModel)]="dataLancamentoPesquisaInicio" pInputText type="date" style="width: 150px;" />
                     <label style="padding: 0 5px 0 5px;">até</label>
@@ -58,8 +58,8 @@
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id"
-        [sortOrder]="1" [tableStyle]="{ 'min-width': '50rem' }"
+    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="dataLancamento"
+        [sortOrder]="-1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
         <ng-template pTemplate="header">
@@ -71,7 +71,7 @@
                 <th style="width: 20%; text-align: center;">Descrição</th>
                 <th style="width: 2%; text-align: center;"></th>
                 <th style="width: 18%; text-align: center;">Valor</th>
-                <th style="width: 5%; text-align: center;">Data Lancamento</th>
+                <th style="width: 5%; text-align: center;">Data Recebimento/Vencimento</th>
                 <th style="width: 20%; text-align: center;">Tipo de Lançamento</th>
                 <th style="width: 15%; text-align: center;">CNPJ</th>
                 <th style="width: 5%; text-align: center;">Ações</th>
@@ -99,11 +99,14 @@
                         }}</b>
                 </td>
 
-                <td style="text-align: center;"
+                <td style="text-align: center;"  [ngStyle]="{
+                    'color': ((today > formatDateToISO(lancamento.dataLancamento)) &&
+                    (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA) &&
+                    (lancamento?.status === 'N')) ? 'red' : ''}"
                     *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
                     <b>{{
                         ((today > formatDateToISO(lancamento.dataLancamento)) &&
-                        (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA) &&
+                        (lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA) &&
                         (lancamento?.status === 'N')) ?
                         'ATRASO NO RECEBIMENTO' :
                         ((lancamento?.status === 'N' && lancamento?.tipoLancamento?.tipoTransacao ===
@@ -130,7 +133,7 @@
                 </td>
                 <td style="text-align: center;">{{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}</td>
                 <td style="text-align: center;">{{ lancamento.tipoLancamento.descricao }}</td>
-                <td style="text-align: center;">{{ lancamento.cnpj.cnpj }}</td>
+                <td style="text-align: center;">{{ lancamento.cnpj.cnpj | cnpj }} - {{ lancamento.cnpj.nome }}</td>
                 <td>
                     <div class="container-acao">
                         <!-- Botão de Editar -->
@@ -208,9 +211,18 @@
             </div>
 
             <div class="card-input m-2">
-                <label for="dataInput">Data Lançamento*</label>
+                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao != TipoTransacao.DESPESA && lancamento?.tipoLancamento?.tipoTransacao != TipoTransacao.RECEITA">
+                    <label for="dataInput">Data Recebimento/Vencimento*</label>
+                </div>
+                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">
+                    <label for="dataInput">Data Vencimento*</label>
+                </div>
+                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
+                    <label for="dataInput">Data Recebimento*</label>
+                </div>
+                
                 <input class="form-control" type="date" name="data" [(ngModel)]="lancamento.dataLancamento"
-                    #dataInput="ngModel" required pTooltip="Data de pagamento, recebimento ou previsão." />
+                    #dataInput="ngModel" required pTooltip="Data de recebimento ou vencimento de pagamento" />
                 <div *ngIf="(dataInput.invalid && dataInput.touched) || dataInput.pristine">
                     <div class="text-danger error-message" *ngIf="dataInput.errors?.['required']">Este campo é
                         obrigatório.</div>
@@ -255,6 +267,8 @@
                     Selecione uma opção válida.
                 </div>
 
+                
+
             </div>
 
             <div class="ui-g-12 campo m-2">
@@ -271,9 +285,9 @@
                 </div>
                 <div class="ui-g-6 m-2">
                     <p-button *ngIf="pageTitle === 'Editar Lançamento'" label="Editar" type="submit"
-                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false"></p-button>
+                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
                     <p-button *ngIf="pageTitle === 'Novo Lançamento'" label="Salvar" type="submit"
-                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false"></p-button>
+                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
                 </div>
 
             </div>

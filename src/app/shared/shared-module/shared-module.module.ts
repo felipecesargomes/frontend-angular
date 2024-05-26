@@ -39,11 +39,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessagesModule } from 'primeng/messages';
+import { CnpjPipe } from '../pipes/cnpj.pipe';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CnpjPipe
+  ],
   imports: [
     CommonModule
   ],
@@ -93,7 +96,8 @@ import { MessagesModule } from 'primeng/messages';
     DropdownModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CnpjPipe
 
   ]
 })

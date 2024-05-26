@@ -210,17 +210,17 @@ export class LancamentoFormComponent implements OnInit {
             this.listaLancamentos = this.listaLancamentos.filter(item => item.id !== lancamento.id);
           },
           error: (error) => {
-            console.error('Ocorreu um erro ao excluir o lançamento:', error);
+            //console.error('Ocorreu um erro ao excluir o lançamento:', error);
           },
           complete: () => {
-            console.log('A operação de exclusão de lançamento foi concluída.');
+            //console.log('A operação de exclusão de lançamento foi concluída.');
             this.lancamento = new Lancamento();
             this.hideShowDeleteModal();
           }
         }
       );
     } else {
-      console.error('Não foi possível excluir o lançamento: ID inválido.');
+      //console.error('Não foi possível excluir o lançamento: ID inválido.');
     }
   }
 
@@ -297,15 +297,15 @@ export class LancamentoFormComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: 'Deletado com sucesso!', detail: 'Usuário deletado com sucesso!' });
         },
         error: (error) => {
-          console.error('Ocorreu um erro ao excluir o lançamento:', error);
+          //console.error('Ocorreu um erro ao excluir o lançamento:', error);
         },
         complete: () => {
-          console.log('A operação de exclusão de lançamento foi concluída.');
+          //console.log('A operação de exclusão de lançamento foi concluída.');
           this.hideShowDeleteModal();
         }
       });
     } else {
-      console.error('Não foi possível excluir o lançamento: ID inválido.');
+      //console.error('Não foi possível excluir o lançamento: ID inválido.');
     }
   }
 
@@ -349,6 +349,7 @@ export class LancamentoFormComponent implements OnInit {
           // Lógica para tratamento de erro
           this.barraDeProgressoCreate = true;
           this.messagesError = true;
+          this.mensagem = 'Ocorreu um erro. Por favor, tente novamente.'
         },
         complete: () => {
           this.listAll();
@@ -380,7 +381,7 @@ export class LancamentoFormComponent implements OnInit {
         this.listaLancamentos = data;
       },
       (error) => {
-        console.error('Erro ao buscar lançamentos:', error);
+        //console.error('Erro ao buscar lançamentos:', error);
         this.barraDeProgressoLista = true;
       },
       () => {
@@ -422,13 +423,16 @@ export class LancamentoFormComponent implements OnInit {
 
   mudarLoja(e: any) {
     let id = Number(e.target.value);
+    this.lancamento.cnpj = undefined
     this.cnpjService.getById(id).subscribe({
       next: (loja) => {
         this.lancamento.cnpj = loja;
         this.lojaValidacao = true;
+        //console.log(this.lancamento.cnpj)
       },
       error: (error) => {
         this.lojaValidacao = false;
+        this.lancamento.cnpj = undefined
       }
     });
   }
