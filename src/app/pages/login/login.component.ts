@@ -37,7 +37,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.authService
-      .tentarLogar(this.username ?? '', this.password ?? '')
+      .tentarLogar(this.username?.toLowerCase() ?? '', this.password ?? '')
       .subscribe(response => {
 
         //Guardar no localstorage
@@ -46,6 +46,7 @@ export class LoginComponent {
         this.router.navigate(['/home'])
         //console.log(response);
       }, errorResponse => {
+        this.loginError = true;
         this.errors = ['Usuário e/ou senha incorreto(s)']
       })
   }

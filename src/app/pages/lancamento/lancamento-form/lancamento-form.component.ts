@@ -294,7 +294,7 @@ export class LancamentoFormComponent implements OnInit {
         next: () => {
           // Remover o lançamento da lista após a deleção bem-sucedida
           this.listAll();
-          this.messageService.add({ severity: 'error', summary: 'Deletado com sucesso!', detail: 'Usuário deletado com sucesso!' });
+          this.messageService.add({ severity: 'sucess', summary: 'Deletado com sucesso!', detail: 'Usuário deletado com sucesso!' });
         },
         error: (error) => {
           //console.error('Ocorreu um erro ao excluir o lançamento:', error);

@@ -9,7 +9,6 @@ import { ValidacaoCidadeDirective } from './shared/validacao-cidade';
 @NgModule({
   declarations: [
     CnpjComponent,
-    Form1Component,
     ValidacaoCidadeDirective
   ],
   imports: [

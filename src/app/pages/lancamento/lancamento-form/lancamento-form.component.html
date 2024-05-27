@@ -6,20 +6,19 @@
 </nav>
 
 <div class="ui-g-12 mt-4">
-    <h1>Lançamentos Financeiros</h1>
+    <h1>Lançamentos Financeiro</h1>
 </div>
 
 <!-- FILTRO DE TABELA -->
 
 <div class="container-responsive">
     <div class="ui-g mt-4">
-        <p-card header="Filtros">
+        <p-card header="Pesquisar Lançamentos">
             <form #p="ngForm" (ngSubmit)="pesquisar(p)">
                 <div class="ui-g-12 campo m-2">
                     <label class="campo-texto">Descrição</label>
                     <input name="descricaoPesquisa" #descricaoInputPesquisa="ngModel" [(ngModel)]="descricaoPesquisa"
-                        class="campo-texto" pTooltip="Descrição do Lançamento. Exemplo: Pagamento de energia."
-                        pInputText type="text" />
+                        class="campo-texto" pInputText type="text" />
                 </div>
 
                 <div class="ui-g-12 campo m-2">
@@ -27,14 +26,14 @@
                     <select id="tipoLancamentoSelect" style="height: 30px; appearance: auto"
                         class="campo-texto check-list" [(ngModel)]="tipoLancamentoPesquisa"
                         name="tipoLancamentoPesquisa" [required]="true">
-                        <option value='' selected>Selecionar Todos</option>
+                        <option value='' disabled>Selecionar Todos</option>
                         <option *ngFor="let tipo of tiposLancamento" [ngValue]="tipo.id">{{ tipo.descricao }}</option>
                     </select>
                 </div>
 
 
                 <div class="ui-g-12 m-2 campo">
-                    <label class="campo-texto">Data de Recebimento ou Vencimento de Pagamentos</label>
+                    <label class="campo-texto">Data de Vencimento</label>
                     <input name="dataLancamentoPesquisaInicio" #dataLancamentoInputPesquisaInicio="ngModel"
                         [(ngModel)]="dataLancamentoPesquisaInicio" pInputText type="date" style="width: 150px;" />
                     <label style="padding: 0 5px 0 5px;">até</label>
@@ -58,11 +57,11 @@
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" 
+    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
         sortField="dataLancamento" [sortOrder]="-1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
-        
+
         <ng-template pTemplate="header">
             <tr style="font-size: 15px;">
                 <th style="width: 5%; text-align: center;">
@@ -82,7 +81,7 @@
                     <p-sortIcon field="valor"></p-sortIcon>
                 </th>
                 <th pSortableColumn="dataLancamento" style="width: 10%; text-align: center;">
-                    Data Recebimento/Vencimento
+                    Data Vencimento
                     <p-sortIcon field="dataLancamento"></p-sortIcon>
                 </th>
                 <th pSortableColumn="tipoLancamento.descricao" style="width: 20%; text-align: center;">
@@ -96,7 +95,7 @@
                 <th style="width: 5%; text-align: center;">Ações</th>
             </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="body" let-lancamento let-rowData let-rowIndex="rowIndex">
             <tr style="font-size: 15px;">
                 <td style="text-align: center;">
@@ -201,8 +200,7 @@
                 <label for="descricaoInput">Descrição</label>
                 <input id="descricaoInput" type="text" name="descricaoLancamento"
                     [(ngModel)]="lancamento.descricaoLancamento" #descricaoInput="ngModel"
-                    placeholder="Ex: Pagar Fornecedor (opcional)" pInputText [style]="{ width: '100%'}"
-                    pTooltip="Descrição do lançamento. Exemplo: Pagamento de Energia." />
+                    placeholder="Ex: Pagar Fornecedor (opcional)" pInputText [style]="{ width: '100%'}" />
                 <!-- Mensagem de erro para o campo Descrição -->
 
             </div>
@@ -212,8 +210,7 @@
                 <input id="valorInputLabel" type="text" appValidacaoValor name="valor" [(ngModel)]="lancamento.valor"
                     #valorInput="ngModel" placeholder="Digite o valor do lançamento" class="p-inputtext"
                     style="width: 100%; text-align: left;" currencyMask
-                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" field="descricao" required
-                    pTooltip="Valor do lançamento." />
+                    [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" field="descricao" required />
 
                 <div *ngIf="(valorInput.invalid && valorInput.touched) || dataInput.pristine">
 
@@ -226,34 +223,14 @@
 
             </div>
 
-            <div class="card-input m-2">
-                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao != TipoTransacao.DESPESA && lancamento?.tipoLancamento?.tipoTransacao != TipoTransacao.RECEITA">
-                    <label for="dataInput">Data Recebimento/Vencimento*</label>
-                </div>
-                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">
-                    <label for="dataInput">Data Vencimento*</label>
-                </div>
-                <div *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
-                    <label for="dataInput">Data Recebimento*</label>
-                </div>
-                
-                <input class="form-control" type="date" name="data" [(ngModel)]="lancamento.dataLancamento"
-                    #dataInput="ngModel" required pTooltip="Data de recebimento ou vencimento de pagamento" />
-                <div *ngIf="(dataInput.invalid && dataInput.touched) || dataInput.pristine">
-                    <div class="text-danger error-message" *ngIf="dataInput.errors?.['required']">Este campo é
-                        obrigatório.</div>
-                </div>
-            </div>
-
-
-            <!-- Para os campos de autocomplete, você precisa garantir que os eventos estejam atualizando o modelo corretamente -->
             <div class="card-input m-2 botaoAutoComplete">
                 <label for="tipoLancamentoInput">Tipo Lançamento*</label>
                 <p-autoComplete id="tipoLancamentoInput" [(ngModel)]="lancamento.tipoLancamento" name="tipoLancamento"
                     [dropdown]="true" [suggestions]="filteredTiposLancamento"
                     (completeMethod)="filterTipoLancamento($event)" field="tipo" [style]="{ width: '100%'}"
                     (onSelect)="onTipoLancamentoSelect($event)" #tipoLancamentoInput="ngModel" [required]="true"
-                    appValidacaoTipoLancamento [emptyMessage]="'Nenhuma opção encontrada'" [showEmptyMessage]= "true"></p-autoComplete>
+                    appValidacaoTipoLancamento [emptyMessage]="'Nenhuma opção encontrada'"
+                    [showEmptyMessage]="true"></p-autoComplete>
                 <div
                     *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched) || (tipoLancamentoInput.invalid && tipoLancamentoInput.pristine)">
                     <div class="text-danger error-message" *ngIf="tipoLancamentoInput.errors?.['required']">Este campo é
@@ -263,6 +240,19 @@
                         *ngIf="tipoLancamentoInput?.errors?.['appValidacaoTipoLancamento']">Verifique se o tipo de
                         lançamento foi selecionado.
                     </div>
+                </div>
+            </div>
+
+            <div class="card-input m-2">
+
+                <label for="dataInput">Data Vencimento*</label>
+
+
+                <input class="form-control" type="date" name="data" [(ngModel)]="lancamento.dataLancamento"
+                    #dataInput="ngModel" required />
+                <div *ngIf="(dataInput.invalid && dataInput.touched) || dataInput.pristine">
+                    <div class="text-danger error-message" *ngIf="dataInput.errors?.['required']">Este campo é
+                        obrigatório.</div>
                 </div>
             </div>
 
@@ -283,7 +273,7 @@
                     Selecione uma opção válida.
                 </div>
 
-                
+
 
             </div>
 
@@ -301,9 +291,11 @@
                 </div>
                 <div class="ui-g-6 m-2">
                     <p-button *ngIf="pageTitle === 'Editar Lançamento'" label="Editar" type="submit"
-                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
+                        styleClass="btn-success"
+                        [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
                     <p-button *ngIf="pageTitle === 'Novo Lançamento'" label="Salvar" type="submit"
-                        styleClass="btn-success" [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
+                        styleClass="btn-success"
+                        [disabled]="(f?.invalid ?? true) || lojaValidacao==false || lancamento.cnpj === undefined"></p-button>
                 </div>
 
             </div>
@@ -321,7 +313,7 @@
         <hr />
         <div class="container-acao" style="justify-content: flex-end;">
             <div class="ui-g-6 m-2">
-                <p-button label="Não" (click)="hideShowDeleteModal()" styleClass="btn-warning"></p-button>
+                <p-button label="Cancelar" (click)="hideShowDeleteModal()" styleClass="btn-warning"></p-button>
             </div>
             <div class="ui-g-6 m-2">
                 <p-button label="Sim" (click)="deleteAction()" styleClass="btn-danger"></p-button>

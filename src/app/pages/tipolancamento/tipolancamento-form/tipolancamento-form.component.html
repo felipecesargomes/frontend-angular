@@ -4,37 +4,94 @@
         <li class="li breadcrumb-item active">Tipos de Lançamento</li>
     </ol>
 </nav>
-<p-messages [(value)]="messages1" [closable]="false"></p-messages>
 
 <div class="ui-g-12 mt-4">
     <h1 class="mt-2 mb-4">Tipos de Lançamento</h1>
 </div>
 
-<form class="row">
-    <div class="form-group col-md-6">
-        <label for="descricao">Descrição:</label>
-        <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao"
-            name="descricao">
+<div class="d-flex">
+    <div class="mr-2" style="flex: 1;">
+        <app-form1 cardHeaderClasses="bg-primary text-white" [headerText]="'Cadastrar Tipo Lançamento'" iconClass="fa fa-clipboard-list">
+            <form class="row">
+                <div class="form-group col-md-12">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao" name="descricao">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="planoConta">Plano de Conta:</label>
+                    <p-dropdown
+                        [options]="planosDeConta"
+                        [(ngModel)]="novoTipoLancamento.planoConta"
+                        name="planoConta"
+                        optionLabel="label"
+                        placeholder="Selecione um Plano de Conta"
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
+                    </p-dropdown>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="tipoTransacao">Tipo de Transação:</label>
+                    <p-dropdown
+                        [options]="tiposDeTransacao"
+                        [(ngModel)]="novoTipoLancamento.tipoTransacao"
+                        name="tipoTransacao"
+                        optionLabel="label"
+                        placeholder="Selecione um Tipo de Transação"
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
+                    </p-dropdown>
+                </div>
+                <div class="form-group col-md-12 mt-4">
+                    <p-button label="Salvar/Editar" class="mr-2" styleClass="p-button-rounded">
+                        <i class="fas fa-save mr-2" style="color:white"></i>
+                    </p-button>
+                    <p-button label="Resetar" styleClass="p-button-rounded">
+                        <i class="fas fa-undo mr-2" style="color:white"></i>
+                    </p-button>
+                </div>
+            </form>
+        </app-form1>
     </div>
-    <div class="form-group col-md-6">
-        <label for="planoConta">Plano de Conta:</label>
-        <input type="text" id="planoConta" name="planoConta" class="form-control" pInputText
-            [(ngModel)]="novoTipoLancamento.planoConta" />
+    
+    <div style="flex: 1;">
+        <app-form1 cardHeaderClasses="bg-primary text-white" [headerText]="'Pesquisar Tipo Lançamento'" iconClass="fa fa-search">
+            <form class="row">
+                <div class="form-group col-md-12">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao" name="descricao">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="planoConta">Plano de Conta:</label>
+                    <p-dropdown
+                        [options]="planosDeConta"
+                        [(ngModel)]="novoTipoLancamento.planoConta"
+                        name="planoConta"
+                        optionLabel="label"
+                        placeholder="Selecione um Plano de Conta"
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
+                    </p-dropdown>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="tipoTransacao">Tipo de Transação:</label>
+                    <p-dropdown
+                        [options]="tiposDeTransacao"
+                        [(ngModel)]="novoTipoLancamento.tipoTransacao"
+                        name="tipoTransacao"
+                        optionLabel="label"
+                        placeholder="Selecione um Tipo de Transação"
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
+                    </p-dropdown>
+                </div>
+                <div class="form-group col-md-12 mt-4">
+                    <p-button label="Pesquisar" class="mr-2" styleClass="p-button-rounded">
+                        <i class="fas fa-save mr-2" style="color:white"></i>
+                    </p-button>
+                    <p-button label="Resetar" styleClass="p-button-rounded">
+                        <i class="fas fa-undo mr-2" style="color:white"></i>
+                    </p-button>
+                </div>
+            </form>
+        </app-form1>
     </div>
-    <div class="form-group col-md-12">
-        <label for="tipoTransacao">Tipo de Transação:</label>
-        <input type="text" id="tipoTransacao" name="tipoTransacao" class="form-control" pInputText
-            [(ngModel)]="novoTipoLancamento.tipoTransacao" />
-    </div>
-    <div class="form-group col-md-12 mt-4">
-        <p-button label="Salvar/Editar" class="mr-2" styleClass="p-button-rounded">
-            <i class="fas fa-save mr-2" style="color:white"></i>
-        </p-button>
-        <p-button label="Resetar" styleClass="p-button-rounded">
-            <i class="fas fa-undo mr-2" style="color:white"></i>
-        </p-button>
-    </div>
-</form>
+</div>
 
 
 

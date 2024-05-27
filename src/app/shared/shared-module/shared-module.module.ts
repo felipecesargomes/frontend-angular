@@ -40,12 +40,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessagesModule } from 'primeng/messages';
 import { CnpjPipe } from '../pipes/cnpj.pipe';
+import { Form1Component } from '../template/form1/form1.component';
 
 
 
 @NgModule({
   declarations: [
-    CnpjPipe
+    CnpjPipe,
+    Form1Component
   ],
   imports: [
     CommonModule
@@ -97,8 +99,12 @@ import { CnpjPipe } from '../pipes/cnpj.pipe';
     HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    CnpjPipe
+    
+    //Pipes
+    CnpjPipe,
 
+    //Components
+    Form1Component
   ]
 })
 export class SharedModuleModule { }

@@ -29,6 +29,7 @@ import { TipolancamentoModule } from './pages/tipolancamento/tipolancamento.modu
 import { LoadingSpinnerComponent } from './shared/loading/loading-spinner/loading-spinner.component';
 import { LoadingService } from './shared/loading/loading.service';
 import { LoadingInterceptor } from './loading-interceptor.service';
+import { TestesComponent } from './testes/testes.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { LoadingInterceptor } from './loading-interceptor.service';
     HomeComponent,
     LoginComponent,
     LayoutComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    TestesComponent
   ],
   imports: [
     //Modulos da Aplicacao

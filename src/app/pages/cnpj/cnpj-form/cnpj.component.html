@@ -16,13 +16,7 @@
             #inputNomeCidade="ngModel"
             [(ngModel)]="cnpj.nome"
             name="nome" required
-            minlength="2"
-            >
-            <div *ngIf="(inputNomeCidade.invalid && inputNomeCidade.touched)">
-                <div class="text-danger" *ngIf="inputNomeCidade?.errors?.['required']">Este campo é
-                    obrigatório.</div>
-                <div class="text-danger" *ngIf="inputNomeCidade.errors?.['minlength']">Loja deve ter pelo menos 2 dígitos</div>
-            </div>
+            minlength="2">
         </div>
 
         <div class="form-group col-md-6">
@@ -35,14 +29,9 @@
                 (onChange)="mudarEstado($event)"
                 name="estado"
                 #inputEstado="ngModel"
-                [required]="true" >
+                [required]="true">
             </p-dropdown>
-            <div *ngIf="(inputEstado.invalid && inputEstado.touched)">
-                <div class="text-danger" *ngIf="inputEstado?.errors?.['required']">Este campo é
-                    obrigatório.</div>
-            </div>
         </div>
-
 
         <div class="form-group col-md-6">
             <label for="cidade">Cidade*:</label>
@@ -61,17 +50,8 @@
               [inputStyle]="{'width':'100%','height':'38px', 'margin':'0px'}" [disabled]="!cnpj.estado" [required]="true" appValidacaoCidade
               (onSelect)="onCidadeSelect($event)" > 
             </p-autoComplete>
-            <div *ngIf="(inputCidade.invalid && inputCidade.touched)">
-                <div class="text-danger" *ngIf="inputCidade?.errors?.['required']">Este campo é
-                    obrigatório.</div>
-                <div class="text-danger"
-                    *ngIf="inputCidade?.errors?.['appValidacaoCidade']">Verifique se cidade
-                    foi selecionada.
-                </div>
-            </div>
         </div>
           
-
         <div class="form-group col-md-6 formCadastroLoja">
             <label for="cnpj">CNPJ:</label>
             <p-inputMask 
@@ -83,14 +63,15 @@
                 placeholder="99.999.999/9999-99"
                 #inputCnpj="ngModel"
                 [required]="true"
-                [minlength]="14" >
+                [minlength]="14"
+                (onInput)="handleCnpjInput($event)">
             </p-inputMask>
         </div>
         <div class="form-group col-md-12 mt-0">
-            <p-button type="submit" label="Salvar/Editar" [disabled]="(f?.invalid ?? true)" class="mr-2" styleClass="p-button-rounded">
+            <p-button type="submit" label="Salvar/Editar" [disabled]="(f?.invalid ?? true) || !(qtdNumCnpj === 14)"  class="mr-2" styleClass="p-button-rounded">
                 <i class="fas fa-save mr-2" style="color:white"></i>
             </p-button>
-            <p-button label="Resetar" styleClass="p-button-rounded">
+            <p-button label="Resetar" styleClass="p-button-rounded" (click)="resetar()">
                 <i class="fas fa-undo mr-2" style="color:white"></i>
             </p-button>
         </div>
@@ -113,25 +94,27 @@
             <tr style="font-size: 15px;">
                 <th style="width: 5%; text-align: center;">ID</th>
                 <th style="width: 25%; text-align: left;">Nome</th>
-                <th style="width: 20%; text-align: left;">Cidade</th>
                 <th style="width: 20%; text-align: left;">Estado</th>
+                <th style="width: 20%; text-align: left;">Cidade</th>
                 <th style="width: 20%; text-align: left;">CNPJ</th>
                 <th style="width: 10%; text-align: center;">Ações</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-loja>
+        <ng-template pTemplate="body" let-loja let-rowData let-rowIndex="rowIndex">
             <tr style="font-size: 15px;">
-                <td style="text-align: center;">{{loja.id}}</td>
+                <td style="text-align: center;">
+                    {{ rowData?.totalUnits }} {{rowIndex + 1}}
+                </td>
                 <td style="text-align: left;">{{loja.nome}}</td>
-                <td style="text-align: left;">{{loja.cidade}}</td>
                 <td style="text-align: left;">{{loja.estado}}</td>
+                <td style="text-align: left;">{{loja.cidade}}</td>
                 <td style="text-align: left;">{{loja.cnpj | cnpj}}</td>
                 <td style="text-align: center;">
                     <div class="container-acao">
-                        <button type="button" class="btn btn-sm btn-primary mr-3">
+                        <button type="button" class="btn btn-sm btn-primary mr-3" (click)="editLoja(loja)">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="openDeleteConfirmation(loja.id)">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -142,4 +125,19 @@
         </ng-template>
     </p-table>
 </div>
+
+<!-- Modal de confirmação de exclusão -->
+<p-dialog header="Confirmação de Exclusão" [(visible)]="displayDeleteConfirmation" [modal]="true" [responsive]="true" [closable]="false">
+    <ng-template pTemplate="content">
+        <p>Tem certeza que deseja excluir esta loja?</p>
+    </ng-template>
+    <hr />
+    <p-footer>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" class="btn-warning mr-2" (click)="cancelDelete()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Sim" class="btn-danger" (click)="confirmDelete()"></button>
+    </p-footer>
+</p-dialog>
+
+
+<p-toast></p-toast>
 <!-- TABELA -->

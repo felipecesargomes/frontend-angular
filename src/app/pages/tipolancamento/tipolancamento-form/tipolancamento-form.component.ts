@@ -16,11 +16,17 @@ export class TipoLancamentoComponent implements OnInit {
 
   messages1: Message[] = []; // Inicializa como um array vazio
 
-  cadastrarTipoLancamento(): void {
-    this.novoTipoLancamento.id = this.listaTiposLancamento.length + 1;
-    this.listaTiposLancamento.push(this.novoTipoLancamento);
-    this.novoTipoLancamento = { id: 0, descricao: '', planoConta: '', tipoTransacao: '' };
-  }
+  planosDeConta = [
+    { label: 'Plano A', value: 'planoA' },
+    { label: 'Plano B', value: 'planoB' },
+    { label: 'Plano C', value: 'planoC' }
+  ];
+
+  tiposDeTransacao = [
+    { label: 'Transação A', value: 'transacaoA' },
+    { label: 'Transação B', value: 'transacaoB' },
+    { label: 'Transação C', value: 'transacaoC' }
+  ];
 
   listaTiposLancamento: any[] = [];
 
@@ -35,6 +41,12 @@ export class TipoLancamentoComponent implements OnInit {
     ];
   }
 
+  cadastrarTipoLancamento(): void {
+    this.novoTipoLancamento.id = this.listaTiposLancamento.length + 1;
+    this.listaTiposLancamento.push(this.novoTipoLancamento);
+    this.novoTipoLancamento = { id: 0, descricao: '', planoConta: '', tipoTransacao: '' };
+  }
+
   carregarTiposLancamentoFicticios(): void {
     this.barraDeProgressoLista = true;
     setTimeout(() => {
@@ -46,5 +58,4 @@ export class TipoLancamentoComponent implements OnInit {
       this.barraDeProgressoLista = false;
     }, 2000); // Simula um atraso na resposta
   }
-
 }

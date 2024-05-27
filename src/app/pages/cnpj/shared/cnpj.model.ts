@@ -7,7 +7,7 @@ export class Cnpj {
         public nome?: string,
         public cidade?: string,
         public cnpj?: string,
-        public estado?: Estado
+        public estado?: string
     ) {
 
     }
