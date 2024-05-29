@@ -12,21 +12,10 @@
 <div class="d-flex">
     <div class="mr-2" style="flex: 1;">
         <app-form1 cardHeaderClasses="bg-primary text-white" [headerText]="'Cadastrar Tipo Lançamento'" iconClass="fa fa-clipboard-list">
-            <form class="row">
+            <form class="row" #f="ngForm" (ngSubmit)="cadastrarTipoLancamento()">
                 <div class="form-group col-md-12">
                     <label for="descricao">Descrição:</label>
-                    <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao" name="descricao">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="planoConta">Plano de Conta:</label>
-                    <p-dropdown
-                        [options]="planosDeConta"
-                        [(ngModel)]="novoTipoLancamento.planoConta"
-                        name="planoConta"
-                        optionLabel="label"
-                        placeholder="Selecione um Plano de Conta"
-                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
-                    </p-dropdown>
+                    <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao" name="descricao" required>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="tipoTransacao">Tipo de Transação:</label>
@@ -35,69 +24,88 @@
                         [(ngModel)]="novoTipoLancamento.tipoTransacao"
                         name="tipoTransacao"
                         optionLabel="label"
+                        optionValue="value"
                         placeholder="Selecione um Tipo de Transação"
-                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}"
+                        (onChange)="onTipoTransacaoChange()" 
+                        [required]="true">
                     </p-dropdown>
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="planoConta">Plano de Conta:</label>
+                    <p-dropdown
+                        [options]="filteredPlanosDeConta"
+                        [(ngModel)]="novoTipoLancamento.planoConta"
+                        name="planoConta"
+                        optionLabel="descricao"
+                        placeholder="Selecione um Plano de Conta"
+                        [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}"
+                        [disabled]="!novoTipoLancamento.tipoTransacao"
+                        [required]="true">
+                    </p-dropdown>
+                </div>                
                 <div class="form-group col-md-12 mt-4">
-                    <p-button label="Salvar/Editar" class="mr-2" styleClass="p-button-rounded">
+                    <p-button label="Salvar" type="submit" class="mr-2" styleClass="p-button-rounded" [disabled]="(f?.invalid ?? true)"  *ngIf="!novoTipoLancamento.id">
                         <i class="fas fa-save mr-2" style="color:white"></i>
                     </p-button>
-                    <p-button label="Resetar" styleClass="p-button-rounded">
+                    <p-button label="Editar" type="submit" class="mr-2" styleClass="p-button-rounded" [disabled]="(f?.invalid ?? true)" *ngIf="novoTipoLancamento.id">
+                        <i class="fas fa-save mr-2" style="color:white"></i>
+                    </p-button>
+                    <p-button label="Limpar" type="button" styleClass="p-button-rounded" (click)="resetarForm()">
                         <i class="fas fa-undo mr-2" style="color:white"></i>
                     </p-button>
                 </div>
             </form>
         </app-form1>
     </div>
-    
-    <div style="flex: 1;">
+
+    <!-- <div style="flex: 2;">
         <app-form1 cardHeaderClasses="bg-primary text-white" [headerText]="'Pesquisar Tipo Lançamento'" iconClass="fa fa-search">
             <form class="row">
                 <div class="form-group col-md-12">
-                    <label for="descricao">Descrição:</label>
-                    <input type="text" class="form-control" id="descricao" [(ngModel)]="novoTipoLancamento.descricao" name="descricao">
+                    <label for="descricaoPesquisa">Descrição:</label>
+                    <input type="text" class="form-control" id="descricaoPesquisa" [(ngModel)]="tipoLancamento.descricao" [disabled]="true" name="descricaoPesquisa">
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="planoConta">Plano de Conta:</label>
+                    <label for="planoContaPesquisa">Plano de Conta:</label>
                     <p-dropdown
+                        [disabled]="true"
                         [options]="planosDeConta"
-                        [(ngModel)]="novoTipoLancamento.planoConta"
-                        name="planoConta"
-                        optionLabel="label"
+                        [(ngModel)]="tipoLancamento.planoConta"
+                        name="planoContaPesquisa"
+                        optionLabel="descricao"
                         placeholder="Selecione um Plano de Conta"
                         [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
                     </p-dropdown>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="tipoTransacao">Tipo de Transação:</label>
+                    <label for="tipoTransacaoPesquisa">Tipo de Transação:</label>
                     <p-dropdown
+                        [disabled]="true"
                         [options]="tiposDeTransacao"
-                        [(ngModel)]="novoTipoLancamento.tipoTransacao"
-                        name="tipoTransacao"
+                        [(ngModel)]="tipoLancamento.tipoTransacao"
+                        name="tipoTransacaoPesquisa"
                         optionLabel="label"
                         placeholder="Selecione um Tipo de Transação"
                         [style]="{'width':'100%', 'margin':'0px', 'padding': '2px'}">
                     </p-dropdown>
                 </div>
                 <div class="form-group col-md-12 mt-4">
-                    <p-button label="Pesquisar" class="mr-2" styleClass="p-button-rounded">
-                        <i class="fas fa-save mr-2" style="color:white"></i>
+                    <p-button label="Pesquisar" class="mr-2" [disabled]="true" styleClass="p-button-rounded" (click)="pesquisarTipoLancamento()">
+                        <i class="fas fa-search mr-2" style="color:white"></i>
                     </p-button>
-                    <p-button label="Resetar" styleClass="p-button-rounded">
+                    <p-button label="Resetar" styleClass="p-button-rounded" [disabled]="true" (click)="resetarPesquisa()">
                         <i class="fas fa-undo mr-2" style="color:white"></i>
                     </p-button>
                 </div>
             </form>
         </app-form1>
-    </div>
+    </div> -->
 </div>
-
-
 
 <!-- TABELA -->
 <div class="card mt-4">
-    <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
+    <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista" [style]="{'height': '6px'}"></p-progressBar>
     <p-table [value]="listaTiposLancamento" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id"
         [sortOrder]="1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
@@ -111,18 +119,18 @@
                 <th style="width: 10%; text-align: center;">Ações</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-tipoLancamento>
+        <ng-template pTemplate="body" let-tipoLancamento let-rowData let-rowIndex="rowIndex">
             <tr style="font-size: 15px;">
-                <td style="text-align: center;">{{tipoLancamento.id}}</td>
+                <td style="text-align: center;">{{ rowData?.totalUnits }} {{rowIndex + 1}}</td>
                 <td style="text-align: left;">{{tipoLancamento.descricao}}</td>
-                <td style="text-align: left;">{{tipoLancamento.planoConta}}</td>
+                <td style="text-align: left;">{{tipoLancamento.planoConta.descricao}}</td>
                 <td style="text-align: left;">{{tipoLancamento.tipoTransacao}}</td>
                 <td style="text-align: center;">
                     <div class="container-acao">
-                        <button type="button" class="btn btn-sm btn-primary mr-3">
+                        <button type="button" class="btn btn-sm btn-primary mr-3" (click)="editarTipoLancamento(tipoLancamento)">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="deletarTipoLancamento(tipoLancamento.id)">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>

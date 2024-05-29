@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,11 @@ import { LoadingSpinnerComponent } from './shared/loading/loading-spinner/loadin
 import { LoadingService } from './shared/loading/loading.service';
 import { LoadingInterceptor } from './loading-interceptor.service';
 import { TestesComponent } from './testes/testes.component';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+// Registra os dados de locale
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -63,6 +68,8 @@ import { TestesComponent } from './testes/testes.component';
     AuthService,
     authGuard,
     LoginRedirectGuard,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+
     //Manda o Token JWT em toda requisição
     {
       provide: HTTP_INTERCEPTORS,

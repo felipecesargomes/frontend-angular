@@ -11445,6 +11445,8 @@ input {
     /* Por exemplo: */
     max-width: 100%;
     margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: auto;
   }
 }
 

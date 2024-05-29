@@ -1,61 +1,109 @@
-import { Component, OnInit } from '@angular/core';
-import { Message } from 'primeng/api';
+import { PlanoContaService } from './../../planoconta/shared/planoconta.service';
+import { PlanoConta } from './../../planoconta/shared/planoconta.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TipoLancamento } from '../shared/tipolancamento.model';
+import { TipoLancamentoService } from '../shared/tipolancamento.service';
+import { MessageService } from 'primeng/api';
+import { TipoTransacao } from '../../lancamento/shared/tipotransacao.enum';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-tipolancamento-form',
   templateUrl: './tipolancamento-form.component.html',
-  styleUrls: ['./tipolancamento-form.component.css']
+  styleUrls: ['./tipolancamento-form.component.css'],
+  providers: [MessageService]
 })
 export class TipoLancamentoComponent implements OnInit {
-  novoTipoLancamento: any = {
-    id: 0,
-    descricao: '',
-    planoConta: '',
-    tipoTransacao: ''
-  };
-
-  messages1: Message[] = []; // Inicializa como um array vazio
-
-  planosDeConta = [
-    { label: 'Plano A', value: 'planoA' },
-    { label: 'Plano B', value: 'planoB' },
-    { label: 'Plano C', value: 'planoC' }
-  ];
-
-  tiposDeTransacao = [
-    { label: 'Transação A', value: 'transacaoA' },
-    { label: 'Transação B', value: 'transacaoB' },
-    { label: 'Transação C', value: 'transacaoC' }
-  ];
-
-  listaTiposLancamento: any[] = [];
-
   barraDeProgressoLista: boolean = false;
 
-  constructor() { }
+  novoTipoLancamento: TipoLancamento = new TipoLancamento();
+  tipoLancamento: TipoLancamento = new TipoLancamento();
+  listaTiposLancamento: TipoLancamento[] = [];
+  planosDeConta: PlanoConta[] = [];
+  tiposDeTransacao: any[] = [];
+  isPlanoContaEnabled: boolean = false;
+  filteredPlanosDeConta: PlanoConta[] = [];
+
+  //Traz TemplateForm para dentro do componente TS
+  @ViewChild('f') form?: NgForm;
+
+
+  constructor(
+    private tipoLancamentoService: TipoLancamentoService,
+    private planoContaService: PlanoContaService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-    this.carregarTiposLancamentoFicticios();
-    this.messages1 = [
-      { severity: 'warn', summary: 'Tela Protótipo', detail: 'Essa tela é um protótipo' },
-    ];
+    this.carregarTiposLancamento();
+    this.carregarPlanosDeConta();
+    this.carregarTiposDeTransacao();
   }
 
   cadastrarTipoLancamento(): void {
-    this.novoTipoLancamento.id = this.listaTiposLancamento.length + 1;
-    this.listaTiposLancamento.push(this.novoTipoLancamento);
-    this.novoTipoLancamento = { id: 0, descricao: '', planoConta: '', tipoTransacao: '' };
+    if (this.form?.valid) {
+      this.tipoLancamentoService.create(this.novoTipoLancamento).subscribe(() => {
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tipo de Lançamento atualizado com sucesso!' });
+        this.resetarForm();
+        this.carregarTiposLancamento();
+      });
+    } else {
+      
+    }
   }
 
-  carregarTiposLancamentoFicticios(): void {
-    this.barraDeProgressoLista = true;
-    setTimeout(() => {
-      this.listaTiposLancamento = [
-        { id: 1, descricao: 'Tipo A', planoConta: 'Plano A', tipoTransacao: 'Transação A' },
-        { id: 2, descricao: 'Tipo B', planoConta: 'Plano B', tipoTransacao: 'Transação B' },
-        // Adicione mais tipos de lançamento fictícios aqui
-      ];
-      this.barraDeProgressoLista = false;
-    }, 2000); // Simula um atraso na resposta
+  carregarTiposDeTransacao(): void {
+    this.tiposDeTransacao = (Object.keys(TipoTransacao) as Array<keyof typeof TipoTransacao>).map(key => {
+      return { label: key, value: TipoTransacao[key] };
+    });
+  }
+
+  carregarTiposLancamento(): void {
+    this.tipoLancamentoService.getAllNotSistema().subscribe((tipos) => {
+      this.listaTiposLancamento = tipos;
+    });
+  }
+
+  carregarPlanosDeConta(): void {
+    this.planoContaService.getAll().subscribe((planosConta) => {
+      this.planosDeConta = planosConta;
+    })
+  }
+
+  editarTipoLancamento(tipo: TipoLancamento): void {
+    this.novoTipoLancamento = new TipoLancamento(
+      tipo.id,
+      tipo.descricao,
+      tipo.planoConta,
+      tipo.tipoTransacao,
+      tipo.sistema
+    );
+  }
+
+  deletarTipoLancamento(id: number): void {
+    this.tipoLancamentoService.delete(id).subscribe(() => {
+      this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tipo de Lançamento deletado com sucesso!' });
+      this.carregarTiposLancamento();
+    });
+  }
+
+  pesquisarTipoLancamento(): void {
+    // Implementar lógica de pesquisa
+  }
+
+  resetarForm(): void {
+    this.novoTipoLancamento = new TipoLancamento();
+  }
+
+  resetarPesquisa(): void {
+    this.tipoLancamento = new TipoLancamento();
+  }
+
+  onTipoTransacaoChange(): void {
+    if (this.novoTipoLancamento.tipoTransacao === TipoTransacao.RECEITA) {
+      this.filteredPlanosDeConta = this.planosDeConta.filter(plano => plano.descricao === 'Receita Bruta');
+    } else {
+      this.filteredPlanosDeConta = this.planosDeConta.filter(plano => plano.descricao !== 'Receita Bruta');
+    }
   }
 }

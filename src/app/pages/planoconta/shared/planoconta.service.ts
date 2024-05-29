@@ -23,7 +23,7 @@ export class PlanoContaService {
     return this.http.put<PlanoConta>(this.apiUrl, planoConta);
   }
 
-  getAllPlanoConta(): Observable<PlanoConta[]> {
+  getAll(): Observable<PlanoConta[]> {
     return this.http.get<PlanoConta[]>(this.apiUrl);
   }
 }

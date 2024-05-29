@@ -152,6 +152,7 @@ export class CnpjComponent implements OnInit, AfterViewInit {
   // Método para editar uma loja existente
   editLoja(loja: Cnpj) {
     this.cnpj = new Cnpj2(loja.id, loja.nome, this.listaCidades.find(cidade => cidade.name === loja.cidade), loja.cnpj, this.listaEstados.find(estado => estado.name === loja.estado));
+    this.qtdNumCnpj = this.cnpj.cnpj?.length;
   }
 
   // Método para excluir uma loja

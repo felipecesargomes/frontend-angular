@@ -42,7 +42,7 @@
                 </div>
                 <div class="ui-g-12 m-2">
                     <p-button type="submit" label="Pesquisar" styleClass="p-button-rounded" class="mr-2"></p-button>
-                    <button type="button" pButton label="Resetar Pesquisa" styleClass="p-button-rounded"
+                    <button type="button" pButton label="Limpar Pesquisa" styleClass="p-button-rounded"
                         (click)="resetarCampos(p)"></button>
                 </div>
             </form>
@@ -79,6 +79,10 @@
                 <th pSortableColumn="valor" style="width: 18%; text-align: center;">
                     Valor
                     <p-sortIcon field="valor"></p-sortIcon>
+                </th>
+                <th pSortableColumn="dataLancamento" style="width: 10%; text-align: center;">
+                    Data Recebimento
+                    <p-sortIcon field="dataLancamento"></p-sortIcon>
                 </th>
                 <th pSortableColumn="dataLancamento" style="width: 10%; text-align: center;">
                     Data Vencimento
@@ -145,9 +149,24 @@
                     </span>
                 </td>
                 <td style="text-align: center; padding-left: 0; padding-right: 0;">
-                    {{ lancamento.valor | currency:'BRL':'symbol':'1.2-2' }}
+                    {{ lancamento.valor | currency:'BRL':'symbol-narrow':'1.2-2':'pt-BR' }}
                 </td>
-                <td style="text-align: center;">{{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}</td>
+                <td style="text-align: center;">
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
+                        {{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}
+                    </span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">
+                        -
+                    </span>
+                </td>
+                <td style="text-align: center;">
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">
+                        {{ lancamento.dataLancamento | date:'dd/MM/yyyy' }}
+                    </span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">
+                        -
+                    </span>
+                </td>
                 <td style="text-align: center;">{{ lancamento.tipoLancamento.descricao }}</td>
                 <td style="text-align: center;">{{ lancamento.cnpj.cnpj | cnpj }} - {{ lancamento.cnpj.nome }}</td>
                 <td>
@@ -187,8 +206,10 @@
 </div>
 
 <div class="card flex justify-content-center" class="dialogResponsivo">
-    <p-dialog header="{{pageTitle}}" [(visible)]="visible" [modal]="true" [draggable]="false" [resizable]="false"
-        [closable]="false">
+    <p-dialog header="{{pageTitle}}" [modal]="true" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+        [draggable]="false" [resizable]="false" [closable]="false">
+        <!-- <p-dialog header="{{pageTitle}}" [modal]="true" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }"
+        [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" [closable]="false"> -->
         <div class="alert alert-danger" *ngIf="messagesError==true" role="alert">
             {{mensagem}}
         </div>
@@ -212,7 +233,7 @@
                     style="width: 100%; text-align: left;" currencyMask
                     [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" field="descricao" required />
 
-                <div *ngIf="(valorInput.invalid && valorInput.touched) || dataInput.pristine">
+                <div *ngIf="(valorInput.invalid && valorInput.touched)">
 
                     <!-- <p *ngIf="valorInput.errors?.['required']">Este campo é obrigatório.</p> !-->
                     <div class="text-danger error-message" *ngIf="valorInput?.errors?.['required']">Este campo é
@@ -231,8 +252,8 @@
                     (onSelect)="onTipoLancamentoSelect($event)" #tipoLancamentoInput="ngModel" [required]="true"
                     appValidacaoTipoLancamento [emptyMessage]="'Nenhuma opção encontrada'"
                     [showEmptyMessage]="true"></p-autoComplete>
-                <div
-                    *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched) || (tipoLancamentoInput.invalid && tipoLancamentoInput.pristine)">
+                <div *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched)">
+                    <!-- *ngIf="(tipoLancamentoInput.invalid && tipoLancamentoInput.touched) || (tipoLancamentoInput.invalid && tipoLancamentoInput.pristine)"> -->
                     <div class="text-danger error-message" *ngIf="tipoLancamentoInput.errors?.['required']">Este campo é
                         obrigatório.
                     </div>
@@ -245,12 +266,16 @@
 
             <div class="card-input m-2">
 
-                <label for="dataInput">Data Vencimento*</label>
+                <label for="dataInput">
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">Data Vencimento*</span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">Data Recebimento*</span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === null">Data*</span>
+                </label>
 
 
                 <input class="form-control" type="date" name="data" [(ngModel)]="lancamento.dataLancamento"
                     #dataInput="ngModel" required />
-                <div *ngIf="(dataInput.invalid && dataInput.touched) || dataInput.pristine">
+                <div *ngIf="(dataInput.invalid && dataInput.touched)">
                     <div class="text-danger error-message" *ngIf="dataInput.errors?.['required']">Este campo é
                         obrigatório.</div>
                 </div>

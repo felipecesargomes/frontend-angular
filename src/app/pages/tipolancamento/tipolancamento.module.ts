@@ -3,10 +3,6 @@ import { TipoLancamentoComponent } from './tipolancamento-form/tipolancamento-fo
 import { CommonModule } from '@angular/common';
 import { SharedModuleModule } from 'src/app/shared/shared-module/shared-module.module';
 
-
-
-
-
 @NgModule({
   declarations: [
     TipoLancamentoComponent
