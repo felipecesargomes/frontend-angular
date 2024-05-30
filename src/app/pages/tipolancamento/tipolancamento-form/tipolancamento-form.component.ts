@@ -48,7 +48,7 @@ export class TipoLancamentoComponent implements OnInit {
         this.carregarTiposLancamento();
       });
     } else {
-      
+
     }
   }
 
@@ -78,6 +78,7 @@ export class TipoLancamentoComponent implements OnInit {
       tipo.tipoTransacao,
       tipo.sistema
     );
+    this.onTipoTransacaoChange();
   }
 
   deletarTipoLancamento(id: number): void {
@@ -87,16 +88,11 @@ export class TipoLancamentoComponent implements OnInit {
     });
   }
 
-  pesquisarTipoLancamento(): void {
-    // Implementar lógica de pesquisa
-  }
 
   resetarForm(): void {
     this.novoTipoLancamento = new TipoLancamento();
-  }
-
-  resetarPesquisa(): void {
-    this.tipoLancamento = new TipoLancamento();
+    this.filteredPlanosDeConta = this.planosDeConta;
+    this.form?.resetForm(); // Resetar o formulário de template
   }
 
   onTipoTransacaoChange(): void {
