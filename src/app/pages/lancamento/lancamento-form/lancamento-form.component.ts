@@ -10,6 +10,9 @@ import { Cnpj } from '../../cnpj/shared/cnpj.model';
 import { TipoTransacao } from '../shared/tipotransacao.enum';
 import { NgForm } from '@angular/forms';
 import { Lancamento } from '../shared/lancamento.model';
+import { Table } from 'primeng/table';
+
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-lancamento-form',
@@ -448,6 +451,18 @@ export class LancamentoFormComponent implements OnInit {
     return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s\+\-]/g, '');
   }
 
+   //=============================================================================================
+  // Exportar Arquivo Excel
+  //=============================================================================================
 
+  fileName = "Relatorio.xlsx";
+
+  @ViewChild('tablelancamento') table?: Table;
+
+  exportExcel() {
+    //let data = document.getE
+    let data = this.table?.value;
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+  }
 
 }

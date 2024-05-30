@@ -53,11 +53,14 @@
 
 <!-- FILTRO DE TABELA -->
 
+<div style="display: flex; justify-content: flex-end;">
+    <p-button (click)="exportExcel()" styleClass="btn-success p-button-rounded mt-3">Exportar para Excel</p-button>
+</div>
 
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLancamentos" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+    <p-table [value]="listaLancamentos" #tablelancamento [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
         sortField="dataLancamento" [sortOrder]="-1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
@@ -267,8 +270,10 @@
             <div class="card-input m-2">
 
                 <label for="dataInput">
-                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">Data Vencimento*</span>
-                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">Data Recebimento*</span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA">Data
+                        Vencimento*</span>
+                    <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === TipoTransacao.RECEITA">Data
+                        Recebimento*</span>
                     <span *ngIf="lancamento?.tipoLancamento?.tipoTransacao === null">Data*</span>
                 </label>
 
