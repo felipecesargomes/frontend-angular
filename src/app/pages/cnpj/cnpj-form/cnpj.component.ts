@@ -185,6 +185,7 @@ export class CnpjComponent implements OnInit, AfterViewInit {
             case 'appValidacaoCidade':
               this.validationErrors.push(`Verifique se cidade foi selecionada.`);
               break;
+   
             default:
               this.validationErrors.push(`Erro no campo ${controlName}: ${errorName}`);
               break;

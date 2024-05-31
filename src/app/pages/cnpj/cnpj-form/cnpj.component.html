@@ -67,8 +67,13 @@
                 (onInput)="handleCnpjInput($event)">
             </p-inputMask>
         </div>
+
+        {{cnpj.id}}
         <div class="form-group col-md-12 mt-0">
-            <p-button type="submit" label="Salvar/Editar" [disabled]="(f?.invalid ?? true) || !(qtdNumCnpj === 14)"  class="mr-2" styleClass="p-button-rounded">
+            <p-button type="submit" label="Salvar" [disabled]="(f?.invalid ?? true) || !(qtdNumCnpj === 14)"  class="mr-2" styleClass="p-button-rounded" *ngIf="cnpj.id === undefined">
+                <i class="fas fa-save mr-2" style="color:white"></i>
+            </p-button>
+            <p-button type="submit" label="Editar" [disabled]="(f?.invalid ?? true) || !(qtdNumCnpj === 14)"  class="mr-2" styleClass="p-button-rounded" *ngIf="cnpj.id != null">
                 <i class="fas fa-save mr-2" style="color:white"></i>
             </p-button>
             <p-button label="Limpar" styleClass="p-button-rounded" (click)="resetar()">

@@ -26,11 +26,20 @@
                     <select id="tipoLancamentoSelect" style="height: 30px; appearance: auto"
                         class="campo-texto check-list" [(ngModel)]="tipoLancamentoPesquisa"
                         name="tipoLancamentoPesquisa" [required]="true">
-                        <option value='' disabled>Selecionar Todos</option>
+                        <option value=''>Selecionar Todos</option>
                         <option *ngFor="let tipo of tiposLancamento" [ngValue]="tipo.id">{{ tipo.descricao }}</option>
                     </select>
                 </div>
 
+                <div class="ui-g-12 campo m-2">
+                    <label class="campo-texto" for="tipoLancamentoSelect">Tipo Transação</label>
+                    <select id="tipoTransacaoSelect" style="height: 30px; appearance: auto"
+                        class="campo-texto check-list" [(ngModel)]="tipoTransacaoPesquisa"
+                        name="tipoTransacaoPesquisa" [required]="true">
+                        <option value=''>Selecionar Todos</option>
+                        <option *ngFor="let tipo of tiposTransacao" [ngValue]="tipo">{{ tipo }}</option>
+                    </select>
+                </div>
 
                 <div class="ui-g-12 m-2 campo">
                     <label class="campo-texto">Data de Vencimento</label>

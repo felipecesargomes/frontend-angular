@@ -1,9 +1,9 @@
+import { TipoLancamento } from './../../tipolancamento/shared/tipolancamento.model';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, flatMap } from 'rxjs/operators';
 import { Lancamento } from '../shared/lancamento.model';
-import { AppConfig } from 'src/app/utils/config/config';
 import { TipoTransacao } from './tipotransacao.enum';
 import { environment } from 'environments/environment';
 
@@ -79,8 +79,21 @@ export class LancamentoService {
     if (params.dataPagamentoFinal) {
       httpParams = httpParams.set('dataPagamentoFinal', params.dataPagamentoFinal);
     }
+    if (params.tipoTransacao) {
+      httpParams = httpParams.set('tipoTransacao', params.tipoTransacao);
+    }
 
     return this.http.get<Lancamento[]>(`${this.apiUrl}filtro`, { params: httpParams }).pipe(
+      map(
+        (lancamentos: Lancamento[]) => lancamentos.map(
+          (lancamento) => {
+            if(lancamento.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA && lancamento.valor != undefined) {
+              lancamento.valor = lancamento.valor * -1;
+            }
+            return lancamento;
+          }
+        )
+      ),
       catchError(this.handleError)
     );
   }

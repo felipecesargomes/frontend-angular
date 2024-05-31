@@ -31,7 +31,8 @@ export class LancamentoFormComponent implements OnInit {
   pt: any;
   TipoTransacao = TipoTransacao;
   checked: boolean = false;
-  today: string = this.formatDateToISO(new Date());;
+  today: string = this.formatDateToISO(new Date());
+  tiposTransacao?: TipoTransacao[];
 
 
   //Nome das modais
@@ -68,6 +69,8 @@ export class LancamentoFormComponent implements OnInit {
   dataLancamentoPesquisaInicio: Date | undefined;
   dataLancamentoPesquisaFinal: Date | undefined;
   tipoLancamentoPesquisa: TipoLancamento | undefined;
+  tipoTransacaoPesquisa: string | undefined; // Adicione esta linha
+
 
   //==============================================================================================
   // Construtor injetando os services necessários e configurações para o componente
@@ -122,6 +125,9 @@ export class LancamentoFormComponent implements OnInit {
 
     this.primengConfig.setTranslation(this.pt);
 
+    // Converter enum em uma lista
+    this.tiposTransacao = Object.values(TipoTransacao);
+
   }
   //=============================================================================================
   // Funções para filtrar autocomplete (sugestão)
@@ -138,13 +144,13 @@ export class LancamentoFormComponent implements OnInit {
           if (tipo.tipo.toLowerCase() === query.trim().toLowerCase())
             this.lancamento.tipoLancamento = tipo;
           return tipo.tipo.toLowerCase().includes(query.toLowerCase());
-        });
+        }).sort((a, b) => b.tipo.toLowerCase().localeCompare(a.tipo.toLowerCase())); // Ordenar por tipo
       } else {
         filteredResults = this.tiposLancamento.filter(tipo => {
           if (tipo.descricao.toLowerCase() === query.trim().toLowerCase())
             this.lancamento.tipoLancamento = tipo;
           return tipo.descricao.toLowerCase().includes(query.toLowerCase());
-        });
+        }).sort((a, b) => b.tipo.toLowerCase().localeCompare(a.tipo.toLowerCase())); // Ordenar por tipo;
       }
       // Verificar se há um valor selecionado
       if (this.selectedTipoLancamento) {
@@ -369,12 +375,12 @@ export class LancamentoFormComponent implements OnInit {
   pesquisar(form: NgForm) {
     //console.log(form.value);
     //console.log(typeof this.dataLancamentoPesquisaFinal);
-    this.barraDeProgressoLista = true;
     const params = {
       descricao: this.descricaoPesquisa,
       tipoLancamento: this.tipoLancamentoPesquisa,
       dataLancamentoInicio: this.dataLancamentoPesquisaInicio,
-      dataLancamentoFinal: this.dataLancamentoPesquisaFinal
+      dataLancamentoFinal: this.dataLancamentoPesquisaFinal,
+      tipoTransacao: this.tipoTransacaoPesquisa
     };
 
     this.lancamentoService.getFiltro(params).subscribe(
@@ -385,10 +391,10 @@ export class LancamentoFormComponent implements OnInit {
       },
       (error) => {
         //console.error('Erro ao buscar lançamentos:', error);
-        this.barraDeProgressoLista = true;
+        this.showError("Erro!", "Ocorreu um erro na pesquisa, tente novamente. Se o problema persistir entre em contato com nossa equipe.");
       },
       () => {
-        this.barraDeProgressoLista = false;
+        //Se der sucesso!
       }
     );
   }
@@ -440,7 +446,7 @@ export class LancamentoFormComponent implements OnInit {
     });
   }
 
-   //=============================================================================================
+  //=============================================================================================
   // Função util
   //=============================================================================================
 
@@ -451,7 +457,7 @@ export class LancamentoFormComponent implements OnInit {
     return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s\+\-]/g, '');
   }
 
-   //=============================================================================================
+  //=============================================================================================
   // Exportar Arquivo Excel
   //=============================================================================================
 
@@ -460,9 +466,44 @@ export class LancamentoFormComponent implements OnInit {
   @ViewChild('tablelancamento') table?: Table;
 
   exportExcel() {
-    //let data = document.getE
-    let data = this.table?.value;
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    if (this.table && this.table.value) {
+      // Remover o campo 'today' dos dados antes de converter para planilha Excel
+      const dataWithoutFields = this.removeFields(this.table.value);
+
+      // Ordenar os dados pelo campo 'id' antes de converter para planilha Excel
+      const sortedData = dataWithoutFields.sort((a, b) => {
+        // Comparando os valores dos IDs para ordenação
+        return a.dataLancamento - b.dataLancamento;
+      });
+
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(sortedData);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      XLSX.writeFile(wb, this.fileName);
+    }
+  }
+
+
+  removeFields(data: any[]): any[] {
+    // Copiar os dados para um novo array sem o campo 'today' e adicionando a loja extraída
+    return data.map(item => {
+      //console.log(item);
+      let situacao;
+      if (item.status === 'S')
+        situacao = "BAIXADO";
+      else
+        situacao = "NÃO BAIXADO";
+      let descricao = item.descricaoLancamento.toUpperCase();
+      let loja = item.cnpj.label.toUpperCase();
+      let data = item.dataLancamento;
+      let tipo_lancamento = item.tipoLancamento.descricao.toUpperCase();
+      const { today, id, idIncremental, dataCadastro, dataLancamento, descricaoLancamento, status, tipoLancamento, cnpj, ...rest } = item;
+      return { id, descricao, data, ...rest, loja, tipo_lancamento, situacao }; // Adicionando a loja extraída ao objeto retornado
+    });
+  }
+
+  showError(titulo: string, mensagem: string) {
+    this.messageService.add({ severity: 'error', summary: titulo, detail: mensagem });
   }
 
 }

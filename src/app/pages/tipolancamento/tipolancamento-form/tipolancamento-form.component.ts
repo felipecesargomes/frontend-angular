@@ -42,13 +42,18 @@ export class TipoLancamentoComponent implements OnInit {
 
   cadastrarTipoLancamento(): void {
     if (this.form?.valid) {
-      this.tipoLancamentoService.create(this.novoTipoLancamento).subscribe(() => {
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tipo de Lançamento atualizado com sucesso!' });
-        this.resetarForm();
-        this.carregarTiposLancamento();
+      this.tipoLancamentoService.create(this.novoTipoLancamento).subscribe({
+        next: () => {
+          this.showSuccess("Sucesso!","Tipo de Lançamento atualizado com sucesso.");
+          this.resetarForm();
+          this.carregarTiposLancamento();
+        },
+        error: () => {
+
+        }
       });
     } else {
-
+      this.showError("Erro!","Ocorreu algum erro ao atualizar o tipo de lançamento.");
     }
   }
 
@@ -59,9 +64,17 @@ export class TipoLancamentoComponent implements OnInit {
   }
 
   carregarTiposLancamento(): void {
-    this.tipoLancamentoService.getAllNotSistema().subscribe((tipos) => {
-      this.listaTiposLancamento = tipos;
-    });
+    this.barraDeProgressoLista = true;
+    this.tipoLancamentoService.getAllNotSistema().subscribe({
+      next: (tipos) => {
+        this.listaTiposLancamento = tipos;
+        this.barraDeProgressoLista = false;
+      },
+      error: (error) => {
+        this.barraDeProgressoLista = true;
+      }
+    }
+    );
   }
 
   carregarPlanosDeConta(): void {
@@ -102,4 +115,15 @@ export class TipoLancamentoComponent implements OnInit {
       this.filteredPlanosDeConta = this.planosDeConta.filter(plano => plano.descricao !== 'Receita Bruta');
     }
   }
+
+  showError(titulo:string, mensagem: string) {
+    this.messageService.add({ severity: 'error', summary: titulo, detail: mensagem });
+  }
+
+  showSuccess(titulo:string, mensagem: string) {
+    this.messageService.add({ severity: 'success', summary: titulo, detail: mensagem });
+  }
+
+
+
 }
