@@ -44,7 +44,7 @@ export class TipoLancamentoComponent implements OnInit {
     if (this.form?.valid) {
       this.tipoLancamentoService.create(this.novoTipoLancamento).subscribe({
         next: () => {
-          this.showSuccess("Sucesso!","Tipo de Lançamento atualizado com sucesso.");
+          this.showSuccess("Sucesso!", "Tipo de Lançamento atualizado com sucesso.");
           this.resetarForm();
           this.carregarTiposLancamento();
         },
@@ -53,7 +53,7 @@ export class TipoLancamentoComponent implements OnInit {
         }
       });
     } else {
-      this.showError("Erro!","Ocorreu algum erro ao atualizar o tipo de lançamento.");
+      this.showError("Erro!", "Ocorreu algum erro ao atualizar o tipo de lançamento.");
     }
   }
 
@@ -71,6 +71,7 @@ export class TipoLancamentoComponent implements OnInit {
         this.barraDeProgressoLista = false;
       },
       error: (error) => {
+        this.showError("Erro!", "Ocorreu um erro ao tentar obter a lista, verifique com nossa equipe.");
         this.barraDeProgressoLista = true;
       }
     }
@@ -94,10 +95,35 @@ export class TipoLancamentoComponent implements OnInit {
     this.onTipoTransacaoChange();
   }
 
-  deletarTipoLancamento(id: number): void {
-    this.tipoLancamentoService.delete(id).subscribe(() => {
-      this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tipo de Lançamento deletado com sucesso!' });
-      this.carregarTiposLancamento();
+  // Variável para controlar a visibilidade do modal de confirmação de exclusão
+  displayDeleteConfirmation: boolean = false;
+
+  // Variável para armazenar o ID da loja a ser excluída
+  deleteLojaId: number = 0;
+
+  // Método para cancelar a exclusão e fechar o modal
+  cancelDelete() {
+    this.displayDeleteConfirmation = false;
+  }
+
+  // Método para confirmar a exclusão e realizar a exclusão da loja
+  confirmDelete(id: number) {
+    this.deleteLojaId = id;
+    this.displayDeleteConfirmation = true;
+  }
+
+  //Confirmar delete
+  deletarTipoLancamento(): void {
+    this.tipoLancamentoService.delete(this.deleteLojaId).subscribe({
+      next: () => {
+        this.showSuccess('Sucesso!','Tipo de Lançamento deletado com sucesso!');
+        this.carregarTiposLancamento();
+        this.displayDeleteConfirmation = false; // Fechar o modal de confirmação
+      },
+      error: (error) => {
+        this.showError('Erro!','Ocorreu um erro ao tentar deletar, verifique se o tipo lançamento já foi utilizado para fazer um lançamento.');
+        this.displayDeleteConfirmation = false; // Fechar o modal de confirmação em caso de erro
+      }
     });
   }
 
@@ -116,11 +142,11 @@ export class TipoLancamentoComponent implements OnInit {
     }
   }
 
-  showError(titulo:string, mensagem: string) {
+  showError(titulo: string, mensagem: string) {
     this.messageService.add({ severity: 'error', summary: titulo, detail: mensagem });
   }
 
-  showSuccess(titulo:string, mensagem: string) {
+  showSuccess(titulo: string, mensagem: string) {
     this.messageService.add({ severity: 'success', summary: titulo, detail: mensagem });
   }
 

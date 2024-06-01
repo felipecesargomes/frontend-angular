@@ -203,6 +203,7 @@ export class LancamentoFormComponent implements OnInit {
       error: (error) => {
         //console.log(error);
         this.barraDeProgressoLista = true;
+        this.showError("Erro!", "Ocorreu um erro ao tentar obter a lista, verifique com nossa equipe.");
       },
       complete: () => {
         this.barraDeProgressoLista = false;

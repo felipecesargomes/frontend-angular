@@ -11533,3 +11533,13 @@ main {
     padding: 0;
     margin: 0;
 }
+
+#chooseLoja.p-multiselect {
+  background-color: transparent !important;
+  border: none !important;
+  width: 200px !important;
+}
+
+.p-multiselect-label-container {
+  color: white;
+}

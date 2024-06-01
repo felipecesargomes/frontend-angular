@@ -6,6 +6,19 @@
         </button>
     </a>
     <div>
+        <p-multiSelect *ngIf="isHomeRoute()"
+            id="chooseLoja" 
+            [options]="listLojas" 
+            [(ngModel)]="selectedLojas" 
+            optionLabel="label" 
+            class="mr-lg-5" 
+            [filter]="false" 
+            [defaultLabel]="'Escolher Lojas'"
+            selectedItemsLabel="{0} lojas selecionadas"
+            (onChange)="onLojasSelected($event)"
+            [showToggleAll]="false"
+            #multiSelect>
+        </p-multiSelect>
         <strong><span style="color: white">{{ usuarioLogado }}</span></strong>
         <a (click)="logout();" href="#"><i class="fas fa-sign-out-alt ml-5" style="font-size: 20px;color: white;"></i></a>
     </div>

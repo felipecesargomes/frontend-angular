@@ -1,52 +1,67 @@
-<div id="layoutAuthentication" style="margin-top: 120px;">
-    <div id="layoutAuthentication_content">
-        <main>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5">
-                        <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header">
-                                <h3 class="text-center font-weight-light my-4">
-                                    Entrar
-                                </h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="alert alert-danger" *ngIf="loginError">
-                                    Login e/ou Senha incorreto(a).
-                                </div>
-                                <div class="alert alert-success" *ngIf="mensagemSucesso">
-                                    {{ mensagemSucesso }}
-                                </div>
-                                <form #loginForm="ngForm" (submit)="onSubmit();">
-                                    <div class="form-group">
-                                        <label class="small mb-1" for="">Login</label>
-                                        <input type="text" name="username" [(ngModel)]="username"
-                                            class="form-control py-4" placeholder="Digite seu login" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="small mb-1" for="">Senha</label>
-                                        <input type="password" name="password" [(ngModel)]="password"
-                                            class="form-control py-4" placeholder="Digite sua senha" />
-                                    </div>
-                                    <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                        <button type="submit" class="btn btn-primary">Login</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="card-footer text-center">
-                                <div class="small">
-
-                                        Cappacitar - Login
-                                    
-                                </div>
-                            </div>
-
-
-                        </div>
+<section class="vh-100" style="background-color: beige;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10">
+          <div class="card" style="border-radius: 1rem;">
+            <div class="row g-0">
+              <div class="col-md-6 col-lg-5 d-none d-md-block">
+                <div class="background-login"></div>
+              </div>
+              <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="card-body p-4 p-lg-5 text-black">
+                  <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+                    <div class="d-flex align-items-center mb-3 pb-1 justify-content-center">
+                      <img src="assets/img/logo-cor.png" class="mb-2" style="height: 130px;" />
+                    </div>  
+                    <!-- Alertas de Erro e Sucesso -->
+                    <div class="alert alert-danger" *ngIf="loginError">
+                      Login e/ou Senha incorreto(a).
                     </div>
+                    <div class="alert alert-success" *ngIf="mensagemSucesso">
+                      {{ mensagemSucesso }}
+                    </div>
+  
+                    <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="username">Login</label>
+                      <input type="text" id="username" name="username" [(ngModel)]="username"
+                        class="form-control form-control-lg" placeholder="Digite seu login" required />
+                    </div>
+  
+                    <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="password">Senha</label>
+                      <input type="password" id="password" name="password" [(ngModel)]="password"
+                        class="form-control form-control-lg" placeholder="Digite sua senha" required />
+                    </div>
+  
+                    <div class="pt-1 mb-4">
+                      <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block"
+                        type="submit">Login</button>
+                    </div>
+  
+                    <!-- <a class="small text-muted" href="#!" disabled>Recuperar a senha</a> -->
+               
+                    <div class="d-flex justify-content-center">
+                        <a href="https://www.instagram.com/cappacitar/" class="mr-lg-4 icon-color" target="_blank">
+                            <i class="fab fa-instagram fa-2x"></i>
+                        </a>
+                        <a href="https://www.facebook.com/cappacitar/" class="mr-lg-4 icon-color" target="_blank">
+                            <i class="fab fa-facebook-f fa-2x"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/cappacitar/" class="mr-lg-4 icon-color" target="_blank">
+                            <i class="fab fa-linkedin-in fa-2x"></i>
+                        </a>
+                        <a href="https://twitter.com/cappacitar_" class="mr-lg-4 icon-color" target="_blank">
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                    </div>                                    
+                    
+                  </form>
                 </div>
+              </div>
             </div>
-        </main>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
+  

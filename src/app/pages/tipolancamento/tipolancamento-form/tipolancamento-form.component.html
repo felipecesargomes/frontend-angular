@@ -130,7 +130,7 @@
                         <button type="button" class="btn btn-sm btn-primary mr-3" (click)="editarTipoLancamento(tipoLancamento)">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger" (click)="deletarTipoLancamento(tipoLancamento.id)">
+                        <button type="button" class="btn btn-sm btn-danger" (click)="confirmDelete(tipoLancamento.id)">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -142,3 +142,16 @@
     </p-table>
 </div>
 <!-- TABELA -->
+<p-toast></p-toast>
+
+<!-- Modal de confirmação de exclusão -->
+<p-dialog header="Confirmação de Exclusão" [(visible)]="displayDeleteConfirmation" [modal]="true" [responsive]="true" [closable]="false">
+    <ng-template pTemplate="content">
+        <p>Tem certeza que deseja excluir esta loja?</p>
+    </ng-template>
+    <hr />
+    <p-footer>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" class="btn-warning mr-2" (click)="cancelDelete()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Sim" class="btn-danger" (click)="deletarTipoLancamento()"></button>
+    </p-footer>
+</p-dialog>

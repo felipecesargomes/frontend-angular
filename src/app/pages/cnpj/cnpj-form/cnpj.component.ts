@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Estado } from 'src/app/utils/cidades-estados/estado.model';
@@ -7,6 +7,7 @@ import { CidadeEstadoService } from 'src/app/utils/cidades-estados/cidades-estad
 import { Cnpj } from '../shared/cnpj.model';
 import { CnpjService } from '../shared/cnpj.service';
 import { Subject, debounceTime } from 'rxjs';
+import { MultiSelect } from 'primeng/multiselect';
 
 // Classe auxiliar para ajudar a salvar no banco de dados
 export class Cnpj2 {
@@ -30,6 +31,11 @@ export class Cnpj2 {
   providers: [MessageService]
 })
 export class CnpjComponent implements OnInit, AfterViewInit {
+  selectedLojas: any[] = [];
+  listLojas: Cnpj[] = [];
+
+  @ViewChild('multiSelect') multiSelect?: MultiSelect;
+
   cnpj: Cnpj2 = new Cnpj2(); // Instância de Cnpj2 para armazenar dados do formulário
   cnpj_post: Cnpj = new Cnpj(); // Instância de Cnpj para enviar dados ao servidor
   listaLojas: Cnpj[] = []; // Lista de lojas carregadas do servidor
@@ -39,7 +45,7 @@ export class CnpjComponent implements OnInit, AfterViewInit {
   filteredCidades: Cidade[] = []; // Lista de cidades filtradas com base no estado selecionado
   validationErrors: string[] = []; // Lista de erros de validação do formulário
   private searchSubject = new Subject<string>(); // Assunto para realizar pesquisa de cidades com debounce
-
+  
   constructor(
     private cidadeService: CidadeEstadoService, // Serviço para carregar cidades
     private estadoService: CidadeEstadoService, // Serviço para carregar estados
@@ -79,16 +85,20 @@ export class CnpjComponent implements OnInit, AfterViewInit {
 
   // Método para carregar a lista de lojas
   carregarLojas(): void {
-    this.barraDeProgressoLista = true;
-    this.cnpjService.getAll().subscribe({
-      next: (lojas) => {
-        this.listaLojas = lojas;
-        this.barraDeProgressoLista = false;
-      },
-      error: () => {
-        this.barraDeProgressoLista = true;
-      }
-    });
+
+
+      this.barraDeProgressoLista = true;
+      this.cnpjService.getAllFilteredByLocalStorage().subscribe({
+        next: (lojas) => {
+          this.listLojas = lojas;
+          this.barraDeProgressoLista = false;
+        },
+        error: () => {
+          this.barraDeProgressoLista = true;
+          this.showError("Erro!", "Ocorreu um erro ao tentar obter a lista, verifique com nossa equipe.");
+        }
+      });
+    
   }
 
   // Método para acionar a pesquisa de cidades
@@ -244,6 +254,10 @@ export class CnpjComponent implements OnInit, AfterViewInit {
   // Atribui o comprimento calculado a qtdNumCnpj
   this.qtdNumCnpj = cnpjLength;
 
+  }
+
+  showError(titulo: string, mensagem: string) {
+    this.messageService.add({ severity: 'error', summary: titulo, detail: mensagem });
   }
   
 

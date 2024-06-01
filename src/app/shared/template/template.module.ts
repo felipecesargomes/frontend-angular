@@ -9,6 +9,7 @@ import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Card1Component } from './card1/card1.component';
 import { Form1Component } from './form1/form1.component';
+import { SharedModuleModule } from '../shared-module/shared-module.module';
 
 
 
@@ -22,7 +23,8 @@ import { Form1Component } from './form1/form1.component';
     RouterModule,
     SidebarModule,
     ImageModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    SharedModuleModule
   ],
   exports: [
     NavbarComponent,

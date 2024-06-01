@@ -41,6 +41,8 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessagesModule } from 'primeng/messages';
 import { CnpjPipe } from '../pipes/cnpj.pipe';
 import { Form1Component } from '../template/form1/form1.component';
+import { MultiSelectModule } from 'primeng/multiselect'; // Importar o módulo do PrimeNG
+
 
 
 
@@ -92,6 +94,7 @@ import { Form1Component } from '../template/form1/form1.component';
     DropdownModule,
     InputMaskModule,
     MessagesModule,
+    MultiSelectModule,
 
     //MÓDULOS UTEIS
     FormsModule,

@@ -38,6 +38,30 @@ export class CnpjService {
     );
   }
 
+  getAllFromLocalStorage(): Cnpj[] {
+    const lojasSelecionadasString = localStorage.getItem('lojasSelecionadas');
+    if (lojasSelecionadasString) {
+      const lojasSelecionadas: Cnpj[] = JSON.parse(lojasSelecionadasString);
+      return lojasSelecionadas;
+    }
+    return [];
+  }
+
+  // Método para obter todas as lojas filtradas pelo localStorage
+  getAllFilteredByLocalStorage(): Observable<Cnpj[]> {
+    const lojasSelecionadas = this.getAllFromLocalStorage();
+    return this.http.get<Cnpj[]>(this.apiUrl).pipe(
+      map((lojas: Cnpj[]) => {
+        // Filtra as lojas da API com base nas lojas selecionadas no localStorage
+        return lojas.filter(loja => lojasSelecionadas.some(selectedLoja => selectedLoja.id === loja.id));
+      }),
+      catchError(error => {
+        console.error('Erro ao obter lojas:', error);
+        return throwError(error);
+      })
+    );
+  }
+
   getById(id: number): Observable<Cnpj> {
     const url = `${this.apiUrl}${id}`;
 

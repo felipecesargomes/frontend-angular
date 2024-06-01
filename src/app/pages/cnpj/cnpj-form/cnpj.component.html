@@ -91,7 +91,7 @@
 <!-- TABELA -->
 <div class="card mt-4">
     <p-progressBar mode="indeterminate" *ngIf="barraDeProgressoLista==true" [style]="{'height': '6px'}"></p-progressBar>
-    <p-table [value]="listaLojas" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id"
+    <p-table [value]="listLojas" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortField="id"
         [sortOrder]="1" [tableStyle]="{ 'min-width': '50rem' }"
         currentPageReportTemplate="Mostrando {first} de {last} até {totalRecords} registros"
         [rowsPerPageOptions]="[10, 25, 50]">
@@ -144,5 +144,5 @@
 </p-dialog>
 
 
-<p-toast></p-toast>
 <!-- TABELA -->
+<p-toast></p-toast>
