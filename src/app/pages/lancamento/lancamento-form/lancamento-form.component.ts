@@ -102,7 +102,7 @@ export class LancamentoFormComponent implements OnInit {
     //=============================================================================================
     // Fazer a listagem de objetos pertencentes a outra tabela
     //=============================================================================================
-    this.cnpjService.getAll().subscribe({
+    this.cnpjService.getAllFilteredByLocalStorage().subscribe({
       next: (lojas) => {
         this.lojasLancamento = lojas;
       }
@@ -192,23 +192,64 @@ export class LancamentoFormComponent implements OnInit {
   // Funções para executar CRUD
   //=============================================================================================
 
+  
+  // listAll() {
+  //   this.barraDeProgressoLista = true;
+  //   const lojasSelecionadas: Cnpj[] | undefined = this.getLojasSelecionadasFromLocalStorage();
+  //   this.lancamentoService.getAll().subscribe({
+  //     next: (lancamentos) => {
+  //       this.listaLancamentos = lancamentos.map((lancamento, index) => {
+  //         return { ...lancamento, idIncremental: index + 1, today: new Date() };
+  //       }).filter;
+  //     },
+  //     error: (error) => {
+  //       //console.log(error);
+  //       this.barraDeProgressoLista = true;
+  //       this.showError("Erro!", "Ocorreu um erro ao tentar obter a lista, verifique com nossa equipe.");
+  //     },
+  //     complete: () => {
+  //       this.barraDeProgressoLista = false;
+  //     }
+  //   });
+  // }
+
   listAll() {
     this.barraDeProgressoLista = true;
+    const lojasSelecionadas: Cnpj[] | undefined = this.getLojasSelecionadasFromLocalStorage();
+    //console.log(lojasSelecionadas);
     this.lancamentoService.getAll().subscribe({
       next: (lancamentos) => {
-        this.listaLancamentos = lancamentos.map((lancamento, index) => {
-          return { ...lancamento, idIncremental: index + 1, today: new Date() };
-        });
+        if (lojasSelecionadas?.length===0) {
+          // Se lojasSelecionadas for undefined, retorna todos os lançamentos
+          this.listaLancamentos = lancamentos.map((lancamento, index) => {
+            return { ...lancamento, idIncremental: index + 1, today: new Date() };
+          });
+        } else {
+          // Se lojasSelecionadas não for undefined, filtra os lançamentos
+          this.listaLancamentos = lancamentos.map((lancamento, index) => {
+            return { ...lancamento, idIncremental: index + 1, today: new Date() };
+          }).filter(lancamento => 
+            lojasSelecionadas?.some(loja => loja.id === lancamento.cnpj?.id)
+          );
+        }
       },
       error: (error) => {
         //console.log(error);
-        this.barraDeProgressoLista = true;
+        this.barraDeProgressoLista = false;
         this.showError("Erro!", "Ocorreu um erro ao tentar obter a lista, verifique com nossa equipe.");
       },
       complete: () => {
         this.barraDeProgressoLista = false;
       }
     });
+  } 
+  
+  private getLojasSelecionadasFromLocalStorage(): Cnpj[] | undefined {
+    const lojasSelecionadasString = localStorage.getItem('lojasSelecionadas');
+    if (lojasSelecionadasString) {
+      return JSON.parse(lojasSelecionadasString);
+    }
+    return undefined; // Retorna undefined se não houver lojas selecionadas
   }
 
   delete(lancamento: Lancamento) {

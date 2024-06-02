@@ -2,12 +2,7 @@
     font-size: 0.75em;
 }
 
-.p-multiselect {
-    background-color: transparent !important;
-    border: none !important;
-    width: 200px !important;
+.p-checkbox .p-checkbox-box {
+    display: none !important;
 }
-
-.p-multiselect-label-container {
-    color: white;
-}
+  

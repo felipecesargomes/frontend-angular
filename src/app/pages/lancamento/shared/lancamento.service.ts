@@ -6,6 +6,7 @@ import { map, catchError, flatMap } from 'rxjs/operators';
 import { Lancamento } from '../shared/lancamento.model';
 import { TipoTransacao } from './tipotransacao.enum';
 import { environment } from 'environments/environment';
+import { Cnpj } from '../../cnpj/shared/cnpj.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +37,43 @@ export class LancamentoService {
     );
   }
 
-  getAll(): Observable<Lancamento[]> {
+  // getAll(): Observable<Lancamento[]> {
+  //   const lojasSelecionadas: Cnpj[] | undefined = this.getLojasSelecionadasFromLocalStorage();
+  //   if (!lojasSelecionadas) {
+  //     return this.http.get<Lancamento[]>(this.apiUrl).pipe(
+  //       map((lancamentos: Lancamento[]) =>
+  //         lancamentos.map((lancamento, index) => ({
+  //           ...lancamento,
+  //           idIncremental: index + 1,
+  //           today: new Date()
+  //         }))
+  //       ),
+  //       catchError(this.handleError)
+  //     );
+  //   }
+  //   return this.http.get<Lancamento[]>(this.apiUrl).pipe(
+  //     map((lancamentos: Lancamento[]) =>
+  //       lancamentos
+  //         .filter(lancamento => {
+  //           if (lancamento.cnpj && lojasSelecionadas) {
+  //             return lojasSelecionadas.some(lojaSelecionada => lojaSelecionada.id === lancamento.id);
+  //           }
+  //           return false;
+  //         })
+  //         .map((lancamento, index) => ({
+  //           ...lancamento,
+  //           idIncremental: index + 1,
+  //           today: new Date()
+  //         }))
+  //     ),
+  //     catchError(this.handleError)
+  //   );
+  // }
+  
 
+
+
+  getAll(): Observable<Lancamento[]> {
     return this.http.get<Lancamento[]>(this.apiUrl).pipe(
       map((lancamentos: Lancamento[]) =>
         lancamentos.map(lancamento => {
@@ -51,6 +87,22 @@ export class LancamentoService {
       catchError(this.handleError)
     );
   }
+
+  // getAll(): Observable<Lancamento[]> {
+  //   const lojasSelecionadas: Cnpj[] | undefined = this.getLojasSelecionadasFromLocalStorage();
+  //   return this.http.get<Lancamento[]>(this.apiUrl).pipe(
+  //     map((lancamentos: Lancamento[]) =>
+  //       lancamentos.map(lancamento => {
+  //         //Pipe que pecorre todos os valores compara com DESPESA e seta valor negativo.
+  //         if (lancamento.tipoLancamento?.tipoTransacao === TipoTransacao.DESPESA && lancamento.valor !== undefined && (lojasSelecionadas.some(lojaSelecionada => lojaSelecionada.id === lancamento.id))) {
+  //           lancamento.valor = lancamento.valor * -1;
+  //         }
+  //         return lancamento;
+  //       })
+  //     ),
+  //     catchError(this.handleError)
+  //   );
+  // }
 
   getById(id: number): Observable<Lancamento> {
     return this.http.get<Lancamento>(`${this.apiUrl}${id}`).pipe(

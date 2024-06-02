@@ -50,10 +50,16 @@ export class CnpjService {
   // Método para obter todas as lojas filtradas pelo localStorage
   getAllFilteredByLocalStorage(): Observable<Cnpj[]> {
     const lojasSelecionadas = this.getAllFromLocalStorage();
+  
     return this.http.get<Cnpj[]>(this.apiUrl).pipe(
       map((lojas: Cnpj[]) => {
-        // Filtra as lojas da API com base nas lojas selecionadas no localStorage
-        return lojas.filter(loja => lojasSelecionadas.some(selectedLoja => selectedLoja.id === loja.id));
+        if (lojasSelecionadas.length === 0) {
+          // Se não houver lojas selecionadas no localStorage, retorna todas as lojas
+          return lojas;
+        } else {
+          // Caso contrário, filtra as lojas com base nas lojas selecionadas
+          return lojas.filter(loja => lojasSelecionadas.some(selectedLoja => selectedLoja.id === loja.id));
+        }
       }),
       catchError(error => {
         console.error('Erro ao obter lojas:', error);

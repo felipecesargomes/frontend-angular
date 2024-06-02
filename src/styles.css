@@ -11543,3 +11543,11 @@ main {
 .p-multiselect-label-container {
   color: white;
 }
+
+#chooseLoja .p-checkbox .p-checkbox-box {
+  display:none;
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled).p-focus {
+  background: none;
+}
