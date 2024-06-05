@@ -19,7 +19,8 @@
             [showToggleAll]="false"
             #multiSelect>
         </p-multiSelect>
-        <strong><span style="color: white">{{ usuarioLogado }}</span></strong>
+        <a routerLink="perfil"><strong><span style="color: white">{{ usuarioLogado }}</span></strong></a>
+        
         <a (click)="logout();" href="#"><i class="fas fa-sign-out-alt ml-5" style="font-size: 20px;color: white;"></i></a>
     </div>
 </nav>
