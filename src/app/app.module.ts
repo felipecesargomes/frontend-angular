@@ -32,6 +32,8 @@ import { LoadingInterceptor } from './loading-interceptor.service';
 import { TestesComponent } from './testes/testes.component';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { PerfilModule } from './pages/perfil/perfil.module';
+
 
 // Registra os dados de locale
 registerLocaleData(localePt);
@@ -51,6 +53,7 @@ registerLocaleData(localePt);
     LancamentoModule,
     CnpjModule,
     TipolancamentoModule,
+    PerfilModule,
     //Modulos de componentes (rodape, sidebar e sidebarnav)
     TemplateModule, //Importante para aplicacao
     BrowserModule, //Importante para iniciar a aplicação

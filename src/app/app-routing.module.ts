@@ -8,6 +8,8 @@ import { authGuard } from './auth.guard';
 import { CnpjComponent } from './pages/cnpj/cnpj-form/cnpj.component';
 import { LoginRedirectGuard } from './login-redirect.guard';
 import { TipoLancamentoComponent } from './pages/tipolancamento/tipolancamento-form/tipolancamento-form.component';
+import { PerfilFormComponent } from './pages/perfil/perfil-form/perfil-form.component';
+
 
 
 const routes: Routes = [
@@ -18,6 +20,7 @@ const routes: Routes = [
       { path: 'lancamento', component: LancamentoFormComponent, canActivate: [authGuard] },
       { path: 'loja', component: CnpjComponent, canActivate: [authGuard] },
       { path: 'tipolancamento', component: TipoLancamentoComponent, canActivate: [authGuard] },
+      { path: 'perfil', component: PerfilFormComponent, canActivate: [authGuard] },
       { path: '', redirectTo: "home", pathMatch: 'full' },
       { path: '**', redirectTo: "home", pathMatch: 'full' }
     ]
